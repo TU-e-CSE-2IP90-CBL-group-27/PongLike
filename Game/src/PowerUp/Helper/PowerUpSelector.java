@@ -29,7 +29,7 @@ public class PowerUpSelector {
             amount = sizeDifference;
         }
 
-        ArrayList<BasePowerUp> selectedPowerUps;
+        ArrayList<BasePowerUp> selectedPowerUps = new ArrayList<>();
         List<BasePowerUp> availablePowerUps = startingList.stream().filter(x -> forbiddenPowerUps.stream().noneMatch(y -> y.equals(x.getName()))).toList();
 
         for (int i = 0; i < amount; i++) {
@@ -42,22 +42,34 @@ public class PowerUpSelector {
             List<RarityEnum> possibleRarities = powerUpsPerRarity.stream()
                     .filter(x -> !x.isEmpty())
                     .map(RarityWithPowerUps::getRarityEnum)
+                    .sorted((x, y) -> (int)Math.floor(x.getWeight() - y.getWeight()))
                     .toList();
 
-            List<Float> rarityWeights = possibleRarities.stream()
-                    .map(RarityEnum::getWeight)
-                    .toList();
-
-            float sum = rarityWeights.stream().reduce(0f, Float::sum );
-            float difference = 100 - sum;
+            double sum = possibleRarities.stream().mapToDouble(x->x.getWeight()).sum();
+            double difference = 100 - sum;
 
             if (difference > 0) {
-                float addition = difference / possibleRarities.size();
-                rarityWeights.forEach(x -> x += addition);
+                double addition = difference / possibleRarities.size();
+                possibleRarities.forEach(x -> x.increaseWeight(addition));
             }
 
             double randomValue = Math.random() * 100;
+
+            RarityEnum selectedRarity = possibleRarities.stream()
+                    .filter(x -> x.getWeight() <= randomValue)
+                    .reduce((first, second) -> second)
+                    .orElseThrow();
+
+            List<BasePowerUp> possiblePowerUps = powerUpsPerRarity.stream().filter(x -> x.getRarityEnum() == selectedRarity)
+                    .findFirst().map(RarityWithPowerUps::getPowerUps).orElseThrow();
+
+            int possiblePowerUpAmount = possiblePowerUps.size();
+            int randomIndex = (int)Math.round(Math.random() * possiblePowerUpAmount - 1);
+            BasePowerUp selectedPowerUp = possiblePowerUps.get(randomIndex);
+            selectedPowerUps.add(selectedPowerUp);
         }
+
+        return selectedPowerUps;
 
         //TODO: complete rate calculation and dynamic scanning
 

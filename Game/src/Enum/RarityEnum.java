@@ -2,9 +2,9 @@ package Enum;
 
 public enum RarityEnum {
     COMMON(60),
-    RARE(25),
-    LEGENDARY(10),
-    INSANE(5);
+    RARE(30 ),
+    LEGENDARY(8.5f),
+    INSANE(1.5f);
 
     private float weight;
 
@@ -14,6 +14,10 @@ public enum RarityEnum {
 
     public void setWeight(float weight) {
         this.weight = weight;
+    }
+
+    public void increaseWeight(double weight) {
+        this.weight += weight;
     }
     RarityEnum(float weight) {
         setWeight(weight);
