@@ -1,3 +1,5 @@
+package src.GameObject;
+
 public class PongGame {
 
 	public static void main(String[] args) {
