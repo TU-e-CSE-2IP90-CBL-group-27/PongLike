@@ -41,7 +41,10 @@ public class GamePanel extends JPanel implemetns Runnable{
     }
 
     public void paint(Graphics g){
-
+        image = createImage(getWidth(), getHeight());
+        graphics = image.getGraphics();
+        draw(graphics);
+        g.drawImage(image,0,0)
     }
 
 
