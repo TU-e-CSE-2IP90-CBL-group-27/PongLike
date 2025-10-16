@@ -33,7 +33,30 @@ public class PowerUpSelector {
         List<BasePowerUp> availablePowerUps = startingList.stream().filter(x -> forbiddenPowerUps.stream().noneMatch(y -> y.equals(x.getName()))).toList();
 
         for (int i = 0; i < amount; i++) {
-            List<RarityWithPowerUps> powerUpsPerRarity= Arrays.stream(RarityEnum.values()).map(x -> new RarityWithPowerUps(x, availablePowerUps.stream().filter(y -> y.getRarityEnum() == x).toList())).toList();
+            List<RarityWithPowerUps> powerUpsPerRarity= Arrays.stream(RarityEnum.values())
+                    .map(x -> new RarityWithPowerUps(x,
+                            availablePowerUps.stream()
+                                    .filter(y -> y.getRarityEnum() == x)
+                                    .toList()))
+                    .toList();
+            List<RarityEnum> possibleRarities = powerUpsPerRarity.stream()
+                    .filter(x -> !x.isEmpty())
+                    .map(RarityWithPowerUps::getRarityEnum)
+                    .toList();
+
+            List<Float> rarityWeights = possibleRarities.stream()
+                    .map(RarityEnum::getWeight)
+                    .toList();
+
+            float sum = rarityWeights.stream().reduce(0f, Float::sum );
+            float difference = 100 - sum;
+
+            if (difference > 0) {
+                float addition = difference / possibleRarities.size();
+                rarityWeights.forEach(x -> x += addition);
+            }
+
+            double randomValue = Math.random() * 100;
         }
 
         //TODO: complete rate calculation and dynamic scanning
