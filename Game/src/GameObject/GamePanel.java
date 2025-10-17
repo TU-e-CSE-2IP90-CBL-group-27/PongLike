@@ -53,7 +53,7 @@ public class GamePanel extends JPanel implements Runnable{
 		paddle2.draw(g);
 		ball.draw(g);
 		score.draw(g);
-Toolkit.getDefaultToolkit().sync(); // I forgot to add this line of code in the video, it helps with the animation
+Toolkit.getDefaultToolkit().sync();
 
 	}
 	public void move() {
@@ -63,19 +63,18 @@ Toolkit.getDefaultToolkit().sync(); // I forgot to add this line of code in the 
 	}
 	public void checkCollision() {
 		
-		//bounce ball off top & bottom window edges
 		if(ball.y <=0) {
 			ball.setYDirection(-ball.yVelocity);
 		}
 		if(ball.y >= GAME_HEIGHT-BALL_DIAMETER) {
 			ball.setYDirection(-ball.yVelocity);
 		}
-		//bounce ball off paddles
+
 		if(ball.intersects(paddle1)) {
 			ball.xVelocity = Math.abs(ball.xVelocity);
-			ball.xVelocity++; //optional for more difficulty
+			ball.xVelocity++; //TODO: consider removing to remove acceleration
 			if(ball.yVelocity>0)
-				ball.yVelocity++; //optional for more difficulty
+				ball.yVelocity++; //TODO: consider removing to remove acceleration
 			else
 				ball.yVelocity--;
 			ball.setXDirection(ball.xVelocity);
@@ -83,15 +82,15 @@ Toolkit.getDefaultToolkit().sync(); // I forgot to add this line of code in the 
 		}
 		if(ball.intersects(paddle2)) {
 			ball.xVelocity = Math.abs(ball.xVelocity);
-			ball.xVelocity++; //optional for more difficulty
+			ball.xVelocity++; //TODO: consider removing to remove acceleration
 			if(ball.yVelocity>0)
-				ball.yVelocity++; //optional for more difficulty
+				ball.yVelocity++; //TODO: consider removing to remove acceleration
 			else
 				ball.yVelocity--;
 			ball.setXDirection(-ball.xVelocity);
 			ball.setYDirection(ball.yVelocity);
 		}
-		//stops paddles at window edges
+		//TODO: handle this being ignored on certain ability
 		if(paddle1.y<=0)
 			paddle1.y=0;
 		if(paddle1.y >= (GAME_HEIGHT-PADDLE_HEIGHT))
@@ -100,7 +99,7 @@ Toolkit.getDefaultToolkit().sync(); // I forgot to add this line of code in the 
 			paddle2.y=0;
 		if(paddle2.y >= (GAME_HEIGHT-PADDLE_HEIGHT))
 			paddle2.y = GAME_HEIGHT-PADDLE_HEIGHT;
-		//give a player 1 point and creates new paddles & ball
+
 		if(ball.x <=0) {
 			score.player2++;
 			newPaddles();
@@ -120,6 +119,7 @@ Toolkit.getDefaultToolkit().sync(); // I forgot to add this line of code in the 
 		double amountOfTicks =60.0;
 		double ns = 1000000000 / amountOfTicks;
 		double delta = 0;
+        //TODO: change something here for endgame resolution
 		while(true) {
 			long now = System.nanoTime();
 			delta += (now -lastTime)/ns;
