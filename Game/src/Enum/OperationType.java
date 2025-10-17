@@ -1,4 +1,4 @@
-package Enum;
+package src.Enum;
 
 public enum OperationType {
     ADDITION,

@@ -1,7 +1,7 @@
-package PowerUp;
+package src.PowerUp;
 
-import Enum.RarityEnum;
-import PowerUp.Abstractions.BasePowerUp;
+import src.Enum.RarityEnum;
+import src.PowerUp.Abstractions.BasePowerUp;
 
 import java.util.List;
 

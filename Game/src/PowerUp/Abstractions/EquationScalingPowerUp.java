@@ -1,6 +1,6 @@
-package PowerUp.Abstractions;
-import Enum.PowerUpCategoryEnum;
-import Enum.RarityEnum;
+package src.PowerUp.Abstractions;
+import src.Enum.PowerUpCategoryEnum;
+import src.Enum.RarityEnum;
 
 public abstract class EquationScalingPowerUp extends BasePowerUp {
     public abstract float equation(float value, int level);

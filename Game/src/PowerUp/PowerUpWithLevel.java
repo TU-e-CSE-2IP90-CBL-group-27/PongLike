@@ -1,6 +1,6 @@
-package PowerUp;
+package src.PowerUp;
 
-import PowerUp.Abstractions.BasePowerUp;
+import src.PowerUp.Abstractions.BasePowerUp;
 
 public class PowerUpWithLevel {
     //TODO: decide whether inheritance or composition is better

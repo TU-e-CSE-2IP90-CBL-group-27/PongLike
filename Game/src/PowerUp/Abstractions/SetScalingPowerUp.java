@@ -1,8 +1,8 @@
-package PowerUp.Abstractions;
+package src.PowerUp.Abstractions;
 
-import Enum.OperationType;
-import Enum.RarityEnum;
-import Enum.PowerUpCategoryEnum;
+import src.Enum.OperationType;
+import src.Enum.RarityEnum;
+import src.Enum.PowerUpCategoryEnum;
 
 public abstract class SetScalingPowerUp extends BasePowerUp {
     private float[] levels;

@@ -1,6 +1,6 @@
-package PowerUp.Helper;
+package src.PowerUp.Helper;
 
-import PowerUp.Abstractions.BasePowerUp;
+import src.PowerUp.Abstractions.BasePowerUp;
 
 import java.util.ArrayList;
 

@@ -1,7 +1,7 @@
-package PowerUp.Abstractions;
+package src.PowerUp.Abstractions;
 
-import Enum.PowerUpCategoryEnum;
-import Enum.RarityEnum;
+import src.Enum.PowerUpCategoryEnum;
+import src.Enum.RarityEnum;
 
 
 /*
