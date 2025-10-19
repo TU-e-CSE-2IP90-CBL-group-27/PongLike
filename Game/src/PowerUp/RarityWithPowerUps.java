@@ -5,6 +5,7 @@ import src.PowerUp.Abstractions.BasePowerUp;
 
 import java.util.List;
 
+//TODO: possibly refactor to map if applicable
 public class RarityWithPowerUps {
     private RarityEnum rarityEnum;
 

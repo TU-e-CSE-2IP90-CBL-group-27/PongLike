@@ -3,6 +3,8 @@ package src.PowerUp.Abstractions;
 import src.Enum.PowerUpCategoryEnum;
 import src.Enum.RarityEnum;
 
+import java.util.Optional;
+
 
 /*
 This class is the base class for the power up object.
@@ -25,7 +27,7 @@ public abstract class BasePowerUp {
     public int getMaximumLevel() {
         return maximumLevel;
     }
-    private PowerUpCategoryEnum powerUpCategory;
+    private final PowerUpCategoryEnum powerUpCategory;
     public PowerUpCategoryEnum getPowerUpCategory() {
         return powerUpCategory;
     }
@@ -34,8 +36,8 @@ public abstract class BasePowerUp {
         return description;
     }
     private String imagePath;
-    public String getImagePath() {
-        return imagePath;
+    public Optional<String> getImagePath() {
+        return Optional.ofNullable(imagePath);
     }
 
     private RarityEnum rarityEnum;
