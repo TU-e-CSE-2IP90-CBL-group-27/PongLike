@@ -80,7 +80,7 @@ public class PowerUpPanel extends JPanel {
         add(maxLevelLabel, gridBagConstraints);
     }
 
-    public void createPowerUpPanel() {
+    public void createPowerUpPanel(PowerUpSelectionWindow selectionFrame) {
         Color mainColor = powerUp.getRarityEnum().getColor();
         GridBagConstraints gbc = setLayout(mainColor);
         setIconIfExists(gbc);
@@ -93,18 +93,25 @@ public class PowerUpPanel extends JPanel {
 
         setRarity(gbc, mainColor);
         setMaxLevel(gbc);
-        createButton(gbc, mainColor);
+        createButton(gbc, mainColor, selectionFrame);
     }
 
-    private void createButton(GridBagConstraints gridBagConstraints,Color mainColor) {
+    private void buttonAction(PowerUpSelectionWindow selectionFrame) {
+        selectionFrame.selectPowerUp(powerUp);
+    }
+
+    private void createButton(GridBagConstraints gridBagConstraints, Color mainColor, PowerUpSelectionWindow selectionFrame) {
         JButton selectButton = new JButton("Select");
         gridBagConstraints.fill = GridBagConstraints.HORIZONTAL;
         selectButton.setBorder(new LineBorder(mainColor));
+        selectButton.addActionListener(e -> {
+            buttonAction(selectionFrame);
+        });
         add(selectButton, gridBagConstraints);
     }
 
-    public PowerUpPanel(BasePowerUp powerUp) {
+    public PowerUpPanel(PowerUpSelectionWindow selectionFrame, BasePowerUp powerUp) {
         this.powerUp = powerUp;
-        this.createPowerUpPanel();
+        this.createPowerUpPanel(selectionFrame);
     }
 }

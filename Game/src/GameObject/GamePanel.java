@@ -1,5 +1,7 @@
 package src.GameObject;
 
+import src.PowerUp.Actions.PowerUpAdder;
+
 import java.awt.*;
 import java.awt.event.*;
 import java.util.*;
@@ -21,8 +23,10 @@ public class GamePanel extends JPanel implements Runnable{
 	Paddle paddle2;
 	Ball ball;
 	Score score;
+
+    private GameFrame gameFrame;
 	
-	GamePanel(){
+	public GamePanel(GameFrame gameFrame){
 		newPaddles();
 		newBall();
 		score = new Score(GAME_WIDTH,GAME_HEIGHT);
@@ -102,12 +106,14 @@ Toolkit.getDefaultToolkit().sync();
 
 		if(ball.x <=0) {
 			score.player2++;
+            PowerUpAdder.createSelectionUI(gameFrame, paddle1);
 			newPaddles();
 			newBall();
 			System.out.println("Player 2: "+score.player2);
 		}
 		if(ball.x >= GAME_WIDTH-BALL_DIAMETER) {
 			score.player1++;
+            PowerUpAdder.createSelectionUI(gameFrame, paddle2);
 			newPaddles();
 			newBall();
 			System.out.println("Player 1: "+score.player1);

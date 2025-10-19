@@ -1,13 +1,51 @@
 package src.GameObject;
 
+import src.PowerUp.Abstractions.BasePowerUp;
+import src.PowerUp.PowerUpWithLevel;
+import src.PowerUp.UI.PowerUpPanel;
+
 import java.awt.*;
 import java.awt.event.*;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Paddle extends Rectangle{
-
+    // TODO: obviously make the player a child of paddle
 	int id;
 	int yVelocity;
 	int speed = 10;
+
+    private int powerUpChoiceAmount = 3;
+
+    public int getPowerUpChoiceAmount() {
+        return this.powerUpChoiceAmount;
+    }
+
+    public void setPowerUpChoiceAmount(int amount) {
+        this.powerUpChoiceAmount = amount;
+    }
+
+    public void increasePowerUpChoiceAmount() {
+        this.powerUpChoiceAmount++;
+    }
+
+    private ArrayList<PowerUpWithLevel> powerUpWithLevels = new ArrayList<>();
+
+    public ArrayList<PowerUpWithLevel> getPowerUps() {
+        return powerUpWithLevels;
+    }
+
+    public void setPowerUpWithLevels(ArrayList<PowerUpWithLevel> powerUpWithLevels) {
+        this.powerUpWithLevels = powerUpWithLevels;
+    }
+
+    public void addPowerUpWithLevel(BasePowerUp powerUp) {
+        powerUpWithLevels.add(new PowerUpWithLevel(powerUp));
+    }
+
+    public void clearPowerUps() {
+        powerUpWithLevels.clear();
+    }
 	
 	Paddle(int x, int y, int PADDLE_WIDTH, int PADDLE_HEIGHT, int id){
 		super(x,y,PADDLE_WIDTH,PADDLE_HEIGHT);
