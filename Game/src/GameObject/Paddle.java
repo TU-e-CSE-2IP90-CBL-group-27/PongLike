@@ -12,9 +12,21 @@ import java.util.List;
 
 public class Paddle extends Rectangle{
     // TODO: obviously make the player a child of paddle
+    // TODO: consider using ints instead of floats for movement
 	int id;
-	int yVelocity;
-	int speed = 10;
+	private float yVelocity;
+	private float speed = 10;
+    public float getSpeed() {
+        return speed;
+    }
+
+    public void setHeight(float height) {
+        this.height = (int) height;
+    }
+
+    public void setSpeed(float speed) {
+        this.speed = speed;
+    }
 
     private int powerUpChoiceAmount = 3;
 
@@ -110,11 +122,11 @@ public class Paddle extends Rectangle{
 			break;
 		}
 	}
-	public void setYDirection(int yDirection) {
+	public void setYDirection(float yDirection) {
 		yVelocity = yDirection;
 	}
 	public void move() {
-		y= y + yVelocity;
+		y = y + Math.round(yVelocity);
 	}
 	public void draw(Graphics g) {
 		if(id==1)

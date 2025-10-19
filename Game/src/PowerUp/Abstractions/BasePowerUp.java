@@ -56,6 +56,7 @@ public abstract class BasePowerUp {
         this.description = description;
         this.powerUpCategory = powerUpCategoryEnum;
         this.description = description;
+        this.rarityEnum = rarityEnum;
     }
 
     public BasePowerUp(String name, String description, PowerUpCategoryEnum powerUpCategoryEnum, RarityEnum rarityEnum, int maximumLevel) {

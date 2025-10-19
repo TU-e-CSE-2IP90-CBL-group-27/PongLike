@@ -24,6 +24,9 @@ public class GamePanel extends JPanel implements Runnable{
 	Ball ball;
 	Score score;
 
+    private Point startingPointFirstPlayer = new Point(0, (GAME_HEIGHT/2)-(PADDLE_HEIGHT/2));
+    private Point startingPointSecondPlayer = new Point(GAME_WIDTH-PADDLE_WIDTH,(GAME_HEIGHT/2)-(PADDLE_HEIGHT/2));
+
     private GameFrame gameFrame;
 	
 	public GamePanel(GameFrame gameFrame){
@@ -116,14 +119,16 @@ Toolkit.getDefaultToolkit().sync();
 		if(ball.x <=0) {
 			score.player2++;
             PowerUpAdder.createSelectionUI(gameFrame, paddle1);
-			newPaddles();
+			paddle1.setLocation(startingPointFirstPlayer);
+            paddle2.setLocation(startingPointSecondPlayer);
 			newBall();
 			System.out.println("Player 2: "+score.player2);
 		}
 		if(ball.x >= GAME_WIDTH-BALL_DIAMETER) {
 			score.player1++;
             PowerUpAdder.createSelectionUI(gameFrame, paddle2);
-			newPaddles();
+            paddle1.setLocation(startingPointFirstPlayer);
+            paddle2.setLocation(startingPointSecondPlayer);
 			newBall();
 			System.out.println("Player 1: "+score.player1);
 		}

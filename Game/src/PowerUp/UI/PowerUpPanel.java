@@ -26,6 +26,11 @@ public class PowerUpPanel extends JPanel {
         return gbc;
     }
 
+    private void setCategory(GridBagConstraints gridBagConstraints) {
+        JLabel categoryLabel = new JLabel(String.valueOf(powerUp.getPowerUpCategory()));
+        add(categoryLabel, gridBagConstraints);
+    }
+
     private void trySetIcon(GridBagConstraints gridBagConstraints, String string) {
         try {
             JLabel iconLabel = new JLabel(new ImageIcon(string));
@@ -92,6 +97,7 @@ public class PowerUpPanel extends JPanel {
         gbc.weighty = 0;
 
         setRarity(gbc, mainColor);
+        setCategory(gbc);
         setMaxLevel(gbc);
         createButton(gbc, mainColor, selectionFrame);
     }

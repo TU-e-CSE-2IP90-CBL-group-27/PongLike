@@ -27,12 +27,14 @@ public class PowerUpSelector {
     }
 
     private static RarityEnum selectPowerUpRarity(List<RarityWithPowerUps> powerUpsPerRarity) {
+        System.out.println(powerUpsPerRarity.size() + " given size");
         List<RarityEnum> possibleRarities = powerUpsPerRarity.stream()
                 .filter(x -> !x.isEmpty())
                 .map(RarityWithPowerUps::getRarityEnum)
                 .sorted((x, y) -> (int)Math.floor(x.getWeight() - y.getWeight()))
                 .toList();
 
+        System.out.println(possibleRarities.size() + " resulting size");
         fixWeights(possibleRarities);
 
         return rarityRoll(possibleRarities);
@@ -40,9 +42,9 @@ public class PowerUpSelector {
 
     private static RarityEnum rarityRoll(List<RarityEnum> possibleRarities) {
         double randomValue = Math.random() * 100;
-
+        System.out.println(randomValue);
         RarityEnum selectedRarity = possibleRarities.stream()
-                .filter(x -> x.getWeight() <= randomValue)
+                .filter(x -> x.getWeight() >= randomValue)
                 .reduce((first, second) -> second)
                 .orElseThrow();
 
@@ -54,7 +56,7 @@ public class PowerUpSelector {
                 .findFirst().map(RarityWithPowerUps::getPowerUps).orElseThrow();
 
         int possiblePowerUpAmount = possiblePowerUps.size();
-        int randomIndex = (int) Math.round(Math.random() * possiblePowerUpAmount - 1);
+        int randomIndex = (int) Math.round(Math.random() * (possiblePowerUpAmount - 1));
 
         return possiblePowerUps.get(randomIndex);
     }
@@ -62,6 +64,8 @@ public class PowerUpSelector {
     private static void fixWeights(List<RarityEnum> possibleRarities) {
         double sum = possibleRarities.stream().mapToDouble(x->x.getWeight()).sum();
         double difference = 100 - sum;
+        System.out.println(possibleRarities.size());
+        possibleRarities.forEach(x->System.out.println(x.getWeight()));
 
         if (difference > 0) {
             double addition = difference / possibleRarities.size();
@@ -73,10 +77,11 @@ public class PowerUpSelector {
         List<RarityWithPowerUps> powerUpsPerRarity= Arrays.stream(RarityEnum.values())
                 .map(x -> new RarityWithPowerUps(x,
                         availablePowerUps.stream()
-                                .filter(y -> y.getRarityEnum() == x)
+                                .filter(y -> x.equals(y.getRarityEnum()))
                                 .toList()))
                 .toList();
-
+        powerUpsPerRarity.forEach(x -> System.out.println(x.getRarityEnum() + " " + x.getPowerUps().size()));
+        System.out.println(powerUpsPerRarity.size());
         RarityEnum selectedRarity = selectPowerUpRarity(powerUpsPerRarity);
         BasePowerUp selectedPowerUp = selectPowerUp(powerUpsPerRarity, selectedRarity);
         selectedPowerUps.add(selectedPowerUp);

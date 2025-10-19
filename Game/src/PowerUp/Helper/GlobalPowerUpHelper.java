@@ -11,7 +11,7 @@ public class GlobalPowerUpHelper {
         return globalPowerUpList;
     }
 
-    public void setGlobalPowerUpList(ArrayList<BasePowerUp> globalPowerUpList) {
-        this.globalPowerUpList = globalPowerUpList;
+    public static void setGlobalPowerUpList(ArrayList<BasePowerUp> globalPowerUpList) {
+        GlobalPowerUpHelper.globalPowerUpList = globalPowerUpList;
     }
 }
