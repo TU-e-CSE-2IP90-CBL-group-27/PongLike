@@ -19,10 +19,10 @@ public class PowerUpAdder {
                 player.getPowerUpChoiceAmount());
     }
 
-    public static void createSelectionUI(GameFrame gameFrame, Paddle player) {
+    public static void createSelectionUI(GameFrame gameFrame, GamePanel gamePanel, Paddle player) {
         ArrayList<BasePowerUp> powerUps = selectPotentialPowerUps(player);
         PowerUpSelectionWindow.init(
-                gameFrame, powerUps, player
+                gameFrame, gamePanel, powerUps, player
         );
     }
 

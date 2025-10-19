@@ -17,7 +17,7 @@ public abstract class SetScalingPowerUp extends BasePowerUp {
     public float calculateValue(float value, int level) {
         int index = level - 1;
         float levelValue = levels[index];
-        float previousValue = index == 0 ? 0 : levels[index];
+        float previousValue = index == 0 ? 0 : levels[index - 1];
 
         switch (operationType) {
             case ADDITION:

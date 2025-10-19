@@ -22,6 +22,7 @@ public class PowerUpPanel extends JPanel {
         gbc.gridwidth = GridBagConstraints.REMAINDER;
         gbc.insets = new Insets(10, 10, 10, 10);
         gbc.anchor = GridBagConstraints.CENTER;
+        setBackground(Color.gray);
 
         return gbc;
     }
@@ -87,6 +88,7 @@ public class PowerUpPanel extends JPanel {
 
     public void createPowerUpPanel(PowerUpSelectionWindow selectionFrame) {
         Color mainColor = powerUp.getRarityEnum().getColor();
+        System.out.println(mainColor);
         GridBagConstraints gbc = setLayout(mainColor);
         setIconIfExists(gbc);
         setName(gbc, mainColor);

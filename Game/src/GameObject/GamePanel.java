@@ -24,8 +24,22 @@ public class GamePanel extends JPanel implements Runnable{
 	Ball ball;
 	Score score;
 
-    private Point startingPointFirstPlayer = new Point(0, (GAME_HEIGHT/2)-(PADDLE_HEIGHT/2));
-    private Point startingPointSecondPlayer = new Point(GAME_WIDTH-PADDLE_WIDTH,(GAME_HEIGHT/2)-(PADDLE_HEIGHT/2));
+    private boolean isPaused = false;
+
+    public boolean getIsPaused() {
+        return isPaused;
+    }
+
+    public void setIsPaused(boolean isPaused) {
+        this.isPaused = isPaused;
+    }
+
+    public void toggleIsPaused() {
+        isPaused = !isPaused;
+    }
+
+    private final Point startingPointFirstPlayer = new Point(0, (GAME_HEIGHT/2)-(PADDLE_HEIGHT/2));
+    private final Point startingPointSecondPlayer = new Point(GAME_WIDTH-PADDLE_WIDTH,(GAME_HEIGHT/2)-(PADDLE_HEIGHT/2));
 
     private GameFrame gameFrame;
 	
@@ -95,7 +109,7 @@ Toolkit.getDefaultToolkit().sync();
 		if(ball.intersects(paddle2)) {
 			ball.xVelocity = Math.abs(ball.xVelocity);
 
-            float paddleForce = paddle1.getHitForce();
+            float paddleForce = paddle2.getHitForce();
             ball.xVelocity += paddleForce; //TODO: consider removing to remove acceleration
 
             if(ball.yVelocity>0)
@@ -118,7 +132,7 @@ Toolkit.getDefaultToolkit().sync();
 
 		if(ball.x <=0) {
 			score.player2++;
-            PowerUpAdder.createSelectionUI(gameFrame, paddle1);
+            PowerUpAdder.createSelectionUI(gameFrame,this, paddle1);
 			paddle1.setLocation(startingPointFirstPlayer);
             paddle2.setLocation(startingPointSecondPlayer);
 			newBall();
@@ -126,7 +140,7 @@ Toolkit.getDefaultToolkit().sync();
 		}
 		if(ball.x >= GAME_WIDTH-BALL_DIAMETER) {
 			score.player1++;
-            PowerUpAdder.createSelectionUI(gameFrame, paddle2);
+            PowerUpAdder.createSelectionUI(gameFrame,this, paddle2);
             paddle1.setLocation(startingPointFirstPlayer);
             paddle2.setLocation(startingPointSecondPlayer);
 			newBall();
@@ -141,15 +155,18 @@ Toolkit.getDefaultToolkit().sync();
 		double delta = 0;
         //TODO: change something here for endgame resolution
 		while(true) {
-			long now = System.nanoTime();
+            long now = System.nanoTime();
 			delta += (now -lastTime)/ns;
 			lastTime = now;
 			if(delta >=1) {
-				move();
-				checkCollision();
-				repaint();
-				delta--;
-			}
+                checkCollision();
+                repaint();
+                delta--;
+                if (isPaused) {
+                    continue;
+                }
+                move();
+            }
 		}
 	}
 	public class AL extends KeyAdapter{

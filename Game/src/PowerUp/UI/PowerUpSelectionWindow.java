@@ -12,11 +12,15 @@ import java.util.List;
 
 public class PowerUpSelectionWindow extends JDialog {
 
-    Paddle player;
+    private Paddle player;
 
-    public PowerUpSelectionWindow(GameFrame gameFrame, List<BasePowerUp> powerUps, Paddle player) {
+    private GamePanel mainGame;
+
+    public PowerUpSelectionWindow(GameFrame gameFrame, GamePanel gamePanel, List<BasePowerUp> powerUps, Paddle player) {
         super(gameFrame, "Choose Your Power-Up!", true);
+        gamePanel.toggleIsPaused();
         this.player = player;
+        this.mainGame = gamePanel;
         setSize(800, 600);
         setLocationRelativeTo(null);
         setResizable(false);
@@ -30,14 +34,14 @@ public class PowerUpSelectionWindow extends JDialog {
 
     public void selectPowerUp(BasePowerUp powerUp) {
         PowerUpAdder.addPowerUpToPlayer(player, powerUp);
-        JOptionPane.showMessageDialog(this, "You have chosen: " + powerUp.getName());
+        mainGame.toggleIsPaused();
         this.dispose();
     }
 
-    public static void init(GameFrame gameFrame, List<BasePowerUp> powerUps, Paddle player) {
+    public static void init(GameFrame gameFrame, GamePanel gamePanel, List<BasePowerUp> powerUps, Paddle player) {
         SwingUtilities.invokeLater(
                 () -> {
-                    new PowerUpSelectionWindow(gameFrame, powerUps, player).setVisible(true
+                    new PowerUpSelectionWindow(gameFrame, gamePanel, powerUps, player).setVisible(true
                     );
                 }
         );

@@ -8,6 +8,7 @@ public class PowerUpTrigger {
     public static void triggerPowerUp(Paddle player, PowerUpWithLevel powerUpWithLevel) {
          BasePowerUp powerUp = powerUpWithLevel.getPowerUp();
          int level = powerUpWithLevel.getLevel();
+         System.out.println(level);
 
          powerUp.doEffect(player, level);
     }

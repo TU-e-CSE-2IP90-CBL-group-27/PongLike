@@ -62,15 +62,16 @@ public class PowerUpSelector {
     }
 
     private static void fixWeights(List<RarityEnum> possibleRarities) {
-        double sum = possibleRarities.stream().mapToDouble(x->x.getWeight()).sum();
-        double difference = 100 - sum;
-        System.out.println(possibleRarities.size());
-        possibleRarities.forEach(x->System.out.println(x.getWeight()));
+        double sum = possibleRarities.stream().mapToDouble(x-> 100 - x.getWeight()).sum();
+        double difference = 60 - sum;
+        System.out.println("difference " + difference);
 
         if (difference > 0) {
             double addition = difference / possibleRarities.size();
             possibleRarities.forEach(x -> x.increaseWeight(addition));
         }
+        possibleRarities.forEach(x->System.out.println("weight " + x.getWeight()));
+
     }
 
     private static void powerUpSelection(ArrayList<BasePowerUp> availablePowerUps, ArrayList<BasePowerUp> selectedPowerUps) {
@@ -81,7 +82,6 @@ public class PowerUpSelector {
                                 .toList()))
                 .toList();
         powerUpsPerRarity.forEach(x -> System.out.println(x.getRarityEnum() + " " + x.getPowerUps().size()));
-        System.out.println(powerUpsPerRarity.size());
         RarityEnum selectedRarity = selectPowerUpRarity(powerUpsPerRarity);
         BasePowerUp selectedPowerUp = selectPowerUp(powerUpsPerRarity, selectedRarity);
         selectedPowerUps.add(selectedPowerUp);
@@ -91,6 +91,7 @@ public class PowerUpSelector {
         //TODO: handle exceptions
         ArrayList<BasePowerUp> availablePowerUps = new ArrayList<>(getAvailablePowerUps(currentPowerUps));
         int availablePowerUpAmount = availablePowerUps.size();
+        System.out.println("available " + availablePowerUps.size());
 
         if (availablePowerUpAmount < 1) {
             throw new RuntimeException("No power ups left to unlock");
@@ -104,9 +105,16 @@ public class PowerUpSelector {
         for (int i = 0; i < amount; i++) {
             powerUpSelection(availablePowerUps, selectedPowerUps);
         }
-
+        setDefaultRarities();
         return selectedPowerUps;
 
         //TODO: complete rate calculation and dynamic scanning
+    }
+
+    private static void setDefaultRarities() {
+        RarityEnum.COMMON.setWeight(60);
+        RarityEnum.RARE.setWeight(90);
+        RarityEnum.LEGENDARY.setWeight(98.5f);
+        RarityEnum.INSANE.setWeight(100.01f);
     }
 }

@@ -9,6 +9,8 @@ public enum RarityEnum {
     LEGENDARY(98.5f, Color.yellow), // 90-98.5
     INSANE(100.01f, Color.red); // 98.5-100
 
+
+    //TODO: IMMEDIATE - fix how weights work
     private float weight;
     private Color color;
 
@@ -33,5 +35,6 @@ public enum RarityEnum {
     }
     RarityEnum(float weight, Color color) {
         setWeight(weight);
+        setColor(color);
     }
 }
