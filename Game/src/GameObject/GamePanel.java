@@ -76,21 +76,30 @@ Toolkit.getDefaultToolkit().sync();
 
 		if(ball.intersects(paddle1)) {
 			ball.xVelocity = Math.abs(ball.xVelocity);
-			ball.xVelocity++; //TODO: consider removing to remove acceleration
-			if(ball.yVelocity>0)
-				ball.yVelocity++; //TODO: consider removing to remove acceleration
+
+            float paddleForce = paddle1.getHitForce();
+            ball.xVelocity += paddleForce; //TODO: consider removing to remove acceleration
+
+            if(ball.yVelocity>0)
+				ball.yVelocity += paddleForce; //TODO: consider removing to remove acceleration
 			else
-				ball.yVelocity--;
-			ball.setXDirection(ball.xVelocity);
+				ball.yVelocity -= paddleForce;
+
+            ball.setXDirection(ball.xVelocity);
 			ball.setYDirection(ball.yVelocity);
 		}
+        // TODO: refactor
 		if(ball.intersects(paddle2)) {
 			ball.xVelocity = Math.abs(ball.xVelocity);
-			ball.xVelocity++; //TODO: consider removing to remove acceleration
-			if(ball.yVelocity>0)
-				ball.yVelocity++; //TODO: consider removing to remove acceleration
+
+            float paddleForce = paddle1.getHitForce();
+            ball.xVelocity += paddleForce; //TODO: consider removing to remove acceleration
+
+            if(ball.yVelocity>0)
+				ball.yVelocity += paddleForce; //TODO: consider removing to remove acceleration
 			else
-				ball.yVelocity--;
+				ball.yVelocity -= paddleForce;
+
 			ball.setXDirection(-ball.xVelocity);
 			ball.setYDirection(ball.yVelocity);
 		}

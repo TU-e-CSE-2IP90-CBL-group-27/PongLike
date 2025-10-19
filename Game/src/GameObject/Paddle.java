@@ -1,6 +1,7 @@
 package src.GameObject;
 
 import src.PowerUp.Abstractions.BasePowerUp;
+import src.PowerUp.Actions.PowerUpTrigger;
 import src.PowerUp.PowerUpWithLevel;
 import src.PowerUp.UI.PowerUpPanel;
 
@@ -16,6 +17,16 @@ public class Paddle extends Rectangle{
 	int speed = 10;
 
     private int powerUpChoiceAmount = 3;
+
+    private float hitForce = 1f;
+
+    public float getHitForce() {
+        return hitForce;
+    }
+
+    public void setHitForce(float hitForce) {
+        this.hitForce = hitForce;
+    }
 
     public int getPowerUpChoiceAmount() {
         return this.powerUpChoiceAmount;
@@ -40,7 +51,14 @@ public class Paddle extends Rectangle{
     }
 
     public void addPowerUpWithLevel(BasePowerUp powerUp) {
-        powerUpWithLevels.add(new PowerUpWithLevel(powerUp));
+        PowerUpWithLevel power = new PowerUpWithLevel(powerUp);
+        powerUpWithLevels.add(power);
+        PowerUpTrigger.triggerPowerUp(this, power);
+    }
+
+    public void incrementPowerUp(PowerUpWithLevel powerUpWithLevel) {
+        powerUpWithLevel.incrementLevel();
+        PowerUpTrigger.triggerPowerUp(this, powerUpWithLevel);
     }
 
     public void clearPowerUps() {

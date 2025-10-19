@@ -31,7 +31,7 @@ public class PowerUpAdder {
         Optional<PowerUpWithLevel> originalPowerUp = PowerUpFinder.findPowerUpIfExists(player, powerUp);
 
         if (originalPowerUp.isPresent()) {
-            originalPowerUp.get().incrementLevel();
+            player.incrementPowerUp(originalPowerUp.get());
             return;
         }
 

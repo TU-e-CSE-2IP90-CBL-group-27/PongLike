@@ -2,6 +2,7 @@ package src.PowerUp.Abstractions;
 
 import src.Enum.PowerUpCategoryEnum;
 import src.Enum.RarityEnum;
+import src.GameObject.Paddle;
 
 import java.util.Optional;
 
@@ -47,7 +48,7 @@ public abstract class BasePowerUp {
     }
 
     //TODO: implement this when the player paddle is implemented
-    public abstract void doEffect();
+    public abstract void doEffect(Paddle player, int level);
     public abstract float calculateValue(float value, int level);
 
     public BasePowerUp(String name, String description, PowerUpCategoryEnum powerUpCategoryEnum, RarityEnum rarityEnum) {
