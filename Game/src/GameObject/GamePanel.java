@@ -121,7 +121,7 @@ public class GamePanel extends JPanel implements Runnable {
         g.setColor(Color.WHITE);
         g.setFont(timerFont);
         int sw = g.getFontMetrics().stringWidth(timeText);
-        g.drawString(timeText, (GAME_WIDTH - sw) / 2, 40);
+        g.drawString(timeText, (GAME_WIDTH - sw) / 2, 85);
 
         Toolkit.getDefaultToolkit().sync();
     }
