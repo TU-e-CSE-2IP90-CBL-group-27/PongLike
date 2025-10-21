@@ -5,10 +5,9 @@ import java.awt.*;
 public enum RarityEnum {
     //TODO: rename weight to range
     COMMON(60, Color.white), // 0-60
-    RARE(90, Color.blue), // 60-90
-    LEGENDARY(98.5f, Color.yellow), // 90-98.5
-    INSANE(100.01f, Color.red); // 98.5-100
-
+    RARE(30, Color.blue), // 60-90
+    LEGENDARY(8.5f, Color.yellow), // 90-98.5
+    INSANE(1.5f, Color.red); // 98.5-100
 
     //TODO: IMMEDIATE - fix how weights work
     private float weight;

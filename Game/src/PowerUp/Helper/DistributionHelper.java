@@ -1,0 +1,56 @@
+package src.PowerUp.Helper;
+
+import src.Enum.RarityEnum;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
+public class DistributionHelper {
+    public static RarityEnum rarityRoll(List<RarityEnum> rarities) {
+        double weight = Math.random() * 100;
+
+        for (RarityEnum rarity : rarities) {
+            float potentialRarityWeight = rarity.getWeight();
+
+            if (potentialRarityWeight > weight) {
+                return rarity;
+            }
+
+            weight -= potentialRarityWeight;
+        }
+
+        return rarities.getLast();
+    }
+
+    public static void fixRarityWeights(ArrayList<RarityEnum> rarities) {
+        rarities.sort((a, b) -> (int)(a.getWeight() - b.getWeight()));
+
+        double[] weights = rarities.stream().mapToDouble(RarityEnum::getWeight).toArray();
+        double initialSum = Arrays.stream(weights).sum();
+        double difference = 100 - initialSum;
+
+        if (difference <= 0) {
+            return;
+        }
+
+        double minimumValue = Arrays.stream(weights).findFirst().orElse(100);
+        double[] ratios = Arrays.stream(weights)
+                .map(x -> minimumValue / x)
+                .toArray();
+
+        double ratioSum = Arrays.stream(ratios).sum();
+        double baseChance = difference / ratioSum;
+
+        for (int i = 0; i < weights.length; i++) {
+            rarities.get(i).setWeight((float)(baseChance * weights[i]));
+        }
+    }
+
+    public static void setDefaultRarityWeights() {
+        RarityEnum.COMMON.setWeight(60);
+        RarityEnum.RARE.setWeight(30);
+        RarityEnum.LEGENDARY.setWeight(8.5f);
+        RarityEnum.INSANE.setWeight(1.5f);
+    }
+}
