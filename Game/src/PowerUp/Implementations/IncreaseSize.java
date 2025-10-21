@@ -13,7 +13,7 @@ public class IncreaseSize extends SetScalingPowerUp {
                 "Makes your paddle larger. Very useful for defense but limits attack angles a bit",
                 PowerUpCategoryEnum.DEFENSE,
                 RarityEnum.RARE,
-                1,
+                5,
                 new float[]{10, 25, 50f, 65f, 80},
                 OperationType.ADDITION
 
