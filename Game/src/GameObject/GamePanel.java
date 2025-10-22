@@ -1,4 +1,4 @@
-package src.GameObject;
+package src.GameObject; 
 
 import java.awt.*;
 import java.awt.event.*;
@@ -14,11 +14,6 @@ public class GamePanel extends JPanel implements Runnable {
     static final int PADDLE_WIDTH = 25;
     static final int PADDLE_HEIGHT = 100;
 
-    // OBSTACLE CONFIG
-    static final long OBSTACLE_INTERVAL_NANOS = 10_000_000_000L; // 10 seconds
-    static final int PADDLE_SAFE_MARGIN = 150; // distance from paddles
-    static final int MAX_SPAWN_ATTEMPTS = 30;
-
     Thread gameThread;
     Image image;
     Graphics graphics;
@@ -28,13 +23,10 @@ public class GamePanel extends JPanel implements Runnable {
     Ball ball;
     Score score;
 
-    // Obstacle + timer
-    Obstacle obstacle;
-    long lastObstacleSpawnNs;
-
-    // TIMER: start time and formatting
-    long gameStartNs;
-    Font timerFont = new Font("Consolas", Font.BOLD, 32);
+    // Obstacle
+    private ObstacleManager obstacleManager;                  // (kept from previous step)
+    
+    private GameClock gameClock;                   
 
     GamePanel() {
         random = new Random();
@@ -44,11 +36,12 @@ public class GamePanel extends JPanel implements Runnable {
         score = new Score(GAME_WIDTH, GAME_HEIGHT);
 
         // Obstacle init
-        obstacle = null;
-        lastObstacleSpawnNs = System.nanoTime();
+        obstacleManager = new ObstacleManager(           
+            GAME_WIDTH, GAME_HEIGHT, PADDLE_WIDTH
+        );
 
-        // start timer at panel creation
-        gameStartNs = System.nanoTime();
+        // gameclock()
+        gameClock = new GameClock();                  
 
         this.setFocusable(true);
         this.addKeyListener(new AL());
@@ -71,30 +64,7 @@ public class GamePanel extends JPanel implements Runnable {
         paddle2 = new Paddle(GAME_WIDTH-PADDLE_WIDTH, (GAME_HEIGHT/2)-(PADDLE_HEIGHT/2), PADDLE_WIDTH, PADDLE_HEIGHT, 2);
     }
 
-    // spawn obstacle (or respawn) obstacle at a safe random location
-    private void newObstacle() {
-        int minX = PADDLE_WIDTH + PADDLE_SAFE_MARGIN;
-        int maxX = GAME_WIDTH - PADDLE_WIDTH - PADDLE_SAFE_MARGIN - Obstacle.WIDTH;
-        if (maxX <= minX) return;
-
-        int maxY = GAME_HEIGHT - Obstacle.HEIGHT;
-        if (maxY < 0) return;
-
-        for (int attempt = 0; attempt < MAX_SPAWN_ATTEMPTS; attempt++) {
-            int x = minX + random.nextInt((maxX - minX) + 1);
-            int y = random.nextInt(Math.max(1, maxY + 1));
-
-            Obstacle candidate = new Obstacle(x, y);
-            if (!candidate.intersects(ball)) {
-                obstacle = candidate;
-                return;
-            }
-        }
-        obstacle = new Obstacle(
-            minX + (maxX - minX) / 2,
-            Math.max(0, Math.min(GAME_HEIGHT - Obstacle.HEIGHT, (GAME_HEIGHT - Obstacle.HEIGHT) / 2))
-        );
-    }
+    
 
     public void paint(Graphics g) {
         image = createImage(getWidth(), getHeight());
@@ -107,30 +77,17 @@ public class GamePanel extends JPanel implements Runnable {
         paddle1.draw(g);
         paddle2.draw(g);
 
-        if (obstacle != null) {
-            obstacle.draw(g);
-        }
+        obstacleManager.draw(g);
 
         ball.draw(g);
         score.draw(g);
 
-        // Draw timer centered at top (min:sec format)
-        long elapsedNs = System.nanoTime() - gameStartNs;
-        long elapsedSec = elapsedNs / 1_000_000_000L;
-        String timeText = formatTime(elapsedSec);
-        g.setColor(Color.WHITE);
-        g.setFont(timerFont);
-        int sw = g.getFontMetrics().stringWidth(timeText);
-        g.drawString(timeText, (GAME_WIDTH - sw) / 2, 85);
-
+        //Draw the game clock
+        gameClock.draw(g, GAME_WIDTH);            
         Toolkit.getDefaultToolkit().sync();
     }
 
-    private String formatTime(long seconds) {
-        long m = seconds / 60;
-        long s = seconds % 60;
-        return String.format("%02d:%02d", m, s);
-    }
+    
 
     public void move() {
         paddle1.move();
@@ -167,14 +124,7 @@ public class GamePanel extends JPanel implements Runnable {
         }
 
         // bounce off obstacle
-        if (obstacle != null && ball.intersects(obstacle)) {
-            Rectangle inter = ball.intersection(obstacle);
-            if (inter.width < inter.height) {
-                ball.setXDirection(-ball.xVelocity);
-            } else {
-                ball.setYDirection(-ball.yVelocity);
-            }
-        }
+        obstacleManager.handleCollision(ball);
 
         // keep paddles on screen
         if (paddle1.y <= 0) paddle1.y = 0;
@@ -206,11 +156,7 @@ public class GamePanel extends JPanel implements Runnable {
         while (true) {
             long now = System.nanoTime();
 
-            // respawn obstacle every interval
-            if (now - lastObstacleSpawnNs >= OBSTACLE_INTERVAL_NANOS) {
-                newObstacle();
-                lastObstacleSpawnNs = now;
-            }
+            obstacleManager.update(ball);
 
             delta += (now - lastTime) / ns;
             lastTime = now;
