@@ -1,7 +1,7 @@
 package src.GameObject;
 
-import javax.swing.*;
 import java.awt.*;
+import javax.swing.*;
 
 public class GameFrame extends JFrame{
 

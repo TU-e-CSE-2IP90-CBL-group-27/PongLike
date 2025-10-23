@@ -41,13 +41,28 @@ public class GamePanel extends JPanel implements Runnable{
     private final Point startingPointFirstPlayer = new Point(0, (GAME_HEIGHT/2)-(PADDLE_HEIGHT/2));
     private final Point startingPointSecondPlayer = new Point(GAME_WIDTH-PADDLE_WIDTH,(GAME_HEIGHT/2)-(PADDLE_HEIGHT/2));
 
+    private ObstacleManager obstacleManager;                  // (kept from previous step)
+    private GameClock gameClock;
+
     private GameFrame gameFrame;
-	
-	public GamePanel(GameFrame gameFrame){
-		newPaddles();
+
+    public GamePanel(GameFrame gameFrame){
+     random = new Random();
+
+        newPaddles();
 		newBall();
-		score = new Score(GAME_WIDTH,GAME_HEIGHT);
-		this.setFocusable(true);
+
+        // Obstacle init
+        obstacleManager = new ObstacleManager(
+                GAME_WIDTH, GAME_HEIGHT, PADDLE_WIDTH
+        );
+
+        // gameclock()
+        gameClock = new GameClock();
+
+        score = new Score(GAME_WIDTH,GAME_HEIGHT);
+
+        this.setFocusable(true);
 		this.addKeyListener(new AL());
 		this.setPreferredSize(SCREEN_SIZE);
 		
@@ -56,7 +71,6 @@ public class GamePanel extends JPanel implements Runnable{
 	}
 	
 	public void newBall() {
-		random = new Random();
 		ball = new Ball((GAME_WIDTH/2)-(BALL_DIAMETER/2),random.nextInt(GAME_HEIGHT-BALL_DIAMETER),BALL_DIAMETER,BALL_DIAMETER);
 	}
 	public void newPaddles() {
@@ -74,7 +88,9 @@ public class GamePanel extends JPanel implements Runnable{
 		paddle2.draw(g);
 		ball.draw(g);
 		score.draw(g);
-Toolkit.getDefaultToolkit().sync();
+
+        gameClock.draw(g, GAME_WIDTH);
+        Toolkit.getDefaultToolkit().sync();
 
 	}
 	public void move() {
@@ -84,7 +100,7 @@ Toolkit.getDefaultToolkit().sync();
 	}
 	public void checkCollision() {
 		
-		if(ball.y <=0) {
+		if(ball.y <= 0) {
 			ball.setYDirection(-ball.yVelocity);
 		}
 		if(ball.y >= GAME_HEIGHT-BALL_DIAMETER) {
@@ -98,14 +114,12 @@ Toolkit.getDefaultToolkit().sync();
             ball.xVelocity += paddleForce; //TODO: consider removing to remove acceleration
 
             if(ball.yVelocity>0)
-				ball.yVelocity += paddleForce; //TODO: consider removing to remove acceleration
+				ball.yVelocity++; //TODO: consider removing to remove acceleration
 			else
-				ball.yVelocity -= paddleForce;
-
-            ball.setXDirection(ball.xVelocity);
+				ball.yVelocity--;
+			ball.setXDirection(ball.xVelocity);
 			ball.setYDirection(ball.yVelocity);
 		}
-        // TODO: refactor
 		if(ball.intersects(paddle2)) {
 			ball.xVelocity = Math.abs(ball.xVelocity);
 
@@ -113,13 +127,15 @@ Toolkit.getDefaultToolkit().sync();
             ball.xVelocity += paddleForce; //TODO: consider removing to remove acceleration
 
             if(ball.yVelocity>0)
-				ball.yVelocity += paddleForce; //TODO: consider removing to remove acceleration
+				ball.yVelocity++; //TODO: consider removing to remove acceleration
 			else
-				ball.yVelocity -= paddleForce;
-
+				ball.yVelocity--;
 			ball.setXDirection(-ball.xVelocity);
 			ball.setYDirection(ball.yVelocity);
 		}
+
+        obstacleManager.handleCollision(ball);
+
 		//TODO: handle this being ignored on certain ability
 		if(paddle1.y<=0)
 			paddle1.y=0;
@@ -133,17 +149,18 @@ Toolkit.getDefaultToolkit().sync();
 		if(ball.x <=0) {
 			score.player2++;
             PowerUpAdder.createSelectionUI(gameFrame,this, paddle1);
-			paddle1.setLocation(startingPointFirstPlayer);
+            paddle1.setLocation(startingPointFirstPlayer);
             paddle2.setLocation(startingPointSecondPlayer);
-			newBall();
+            newBall();
 			System.out.println("Player 2: "+score.player2);
 		}
-		if(ball.x >= GAME_WIDTH-BALL_DIAMETER) {
+
+        if(ball.x >= GAME_WIDTH-BALL_DIAMETER) {
 			score.player1++;
             PowerUpAdder.createSelectionUI(gameFrame,this, paddle2);
             paddle1.setLocation(startingPointFirstPlayer);
             paddle2.setLocation(startingPointSecondPlayer);
-			newBall();
+            newBall();
 			System.out.println("Player 1: "+score.player1);
 		}
 	}
@@ -155,18 +172,19 @@ Toolkit.getDefaultToolkit().sync();
 		double delta = 0;
         //TODO: change something here for endgame resolution
 		while(true) {
-            long now = System.nanoTime();
+			long now = System.nanoTime();
 			delta += (now -lastTime)/ns;
 			lastTime = now;
+            obstacleManager.update(ball);
 			if(delta >=1) {
-                checkCollision();
-                repaint();
-                delta--;
+				checkCollision();
+				repaint();
+				delta--;
                 if (isPaused) {
                     continue;
                 }
                 move();
-            }
+			}
 		}
 	}
 	public class AL extends KeyAdapter{
