@@ -89,6 +89,7 @@ public class GamePanel extends JPanel implements Runnable{
 		ball.draw(g);
 		score.draw(g);
 
+        obstacleManager.draw(graphics);
         gameClock.draw(g, GAME_WIDTH);
         Toolkit.getDefaultToolkit().sync();
 
