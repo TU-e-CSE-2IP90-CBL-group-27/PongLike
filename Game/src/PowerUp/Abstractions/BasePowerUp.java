@@ -2,6 +2,9 @@ package src.PowerUp.Abstractions;
 
 import src.Enum.PowerUpCategoryEnum;
 import src.Enum.RarityEnum;
+import src.GameObject.Paddle;
+
+import java.util.Optional;
 
 
 /*
@@ -25,7 +28,7 @@ public abstract class BasePowerUp {
     public int getMaximumLevel() {
         return maximumLevel;
     }
-    private PowerUpCategoryEnum powerUpCategory;
+    private final PowerUpCategoryEnum powerUpCategory;
     public PowerUpCategoryEnum getPowerUpCategory() {
         return powerUpCategory;
     }
@@ -34,8 +37,8 @@ public abstract class BasePowerUp {
         return description;
     }
     private String imagePath;
-    public String getImagePath() {
-        return imagePath;
+    public Optional<String> getImagePath() {
+        return Optional.ofNullable(imagePath);
     }
 
     private RarityEnum rarityEnum;
@@ -45,7 +48,7 @@ public abstract class BasePowerUp {
     }
 
     //TODO: implement this when the player paddle is implemented
-    public abstract void doEffect();
+    public abstract void doEffect(Paddle player, int level);
     public abstract float calculateValue(float value, int level);
 
     public BasePowerUp(String name, String description, PowerUpCategoryEnum powerUpCategoryEnum, RarityEnum rarityEnum) {
@@ -53,6 +56,7 @@ public abstract class BasePowerUp {
         this.description = description;
         this.powerUpCategory = powerUpCategoryEnum;
         this.description = description;
+        this.rarityEnum = rarityEnum;
     }
 
     public BasePowerUp(String name, String description, PowerUpCategoryEnum powerUpCategoryEnum, RarityEnum rarityEnum, int maximumLevel) {

@@ -26,27 +26,18 @@ public class PowerUpSelector {
         return availablePowerUps;
     }
 
-    private static RarityEnum selectPowerUpRarity(List<RarityWithPowerUps> powerUpsPerRarity) {
+    private static RarityEnum selectPowerUpRarity(ArrayList<RarityWithPowerUps> powerUpsPerRarity) {
+        System.out.println(powerUpsPerRarity.size() + " given size");
         List<RarityEnum> possibleRarities = powerUpsPerRarity.stream()
                 .filter(x -> !x.isEmpty())
                 .map(RarityWithPowerUps::getRarityEnum)
                 .sorted((x, y) -> (int)Math.floor(x.getWeight() - y.getWeight()))
                 .toList();
 
-        fixWeights(possibleRarities);
+        System.out.println(possibleRarities.size() + " resulting size");
+        DistributionHelper.fixRarityWeights(new ArrayList<>(possibleRarities));
 
-        return rarityRoll(possibleRarities);
-    }
-
-    private static RarityEnum rarityRoll(List<RarityEnum> possibleRarities) {
-        double randomValue = Math.random() * 100;
-
-        RarityEnum selectedRarity = possibleRarities.stream()
-                .filter(x -> x.getWeight() <= randomValue)
-                .reduce((first, second) -> second)
-                .orElseThrow();
-
-        return selectedRarity;
+        return DistributionHelper.rarityRoll(possibleRarities);
     }
 
     private static BasePowerUp selectPowerUp(List<RarityWithPowerUps> powerUpsPerRarity, RarityEnum selectedRarity) {
@@ -54,30 +45,19 @@ public class PowerUpSelector {
                 .findFirst().map(RarityWithPowerUps::getPowerUps).orElseThrow();
 
         int possiblePowerUpAmount = possiblePowerUps.size();
-        int randomIndex = (int) Math.round(Math.random() * possiblePowerUpAmount - 1);
+        int randomIndex = (int) Math.round(Math.random() * (possiblePowerUpAmount - 1));
 
         return possiblePowerUps.get(randomIndex);
     }
-
-    private static void fixWeights(List<RarityEnum> possibleRarities) {
-        double sum = possibleRarities.stream().mapToDouble(x->x.getWeight()).sum();
-        double difference = 100 - sum;
-
-        if (difference > 0) {
-            double addition = difference / possibleRarities.size();
-            possibleRarities.forEach(x -> x.increaseWeight(addition));
-        }
-    }
-
     private static void powerUpSelection(ArrayList<BasePowerUp> availablePowerUps, ArrayList<BasePowerUp> selectedPowerUps) {
         List<RarityWithPowerUps> powerUpsPerRarity= Arrays.stream(RarityEnum.values())
                 .map(x -> new RarityWithPowerUps(x,
                         availablePowerUps.stream()
-                                .filter(y -> y.getRarityEnum() == x)
+                                .filter(y -> x.equals(y.getRarityEnum()))
                                 .toList()))
                 .toList();
-
-        RarityEnum selectedRarity = selectPowerUpRarity(powerUpsPerRarity);
+        powerUpsPerRarity.forEach(x -> System.out.println(x.getRarityEnum() + " " + x.getPowerUps().size()));
+        RarityEnum selectedRarity = selectPowerUpRarity(new ArrayList<>(powerUpsPerRarity));
         BasePowerUp selectedPowerUp = selectPowerUp(powerUpsPerRarity, selectedRarity);
         selectedPowerUps.add(selectedPowerUp);
         availablePowerUps.remove(selectedPowerUp);
@@ -86,20 +66,24 @@ public class PowerUpSelector {
         //TODO: handle exceptions
         ArrayList<BasePowerUp> availablePowerUps = new ArrayList<>(getAvailablePowerUps(currentPowerUps));
         int availablePowerUpAmount = availablePowerUps.size();
+        System.out.println("available " + availablePowerUps.size());
 
         if (availablePowerUpAmount < 1) {
             throw new RuntimeException("No power ups left to unlock");
         }
 
-        if (availablePowerUpAmount > amount) {
+        if (availablePowerUpAmount < amount) {
             amount = availablePowerUpAmount;
         }
+
+        System.out.println(amount + " amount");
 
         ArrayList<BasePowerUp> selectedPowerUps = new ArrayList<>();
         for (int i = 0; i < amount; i++) {
             powerUpSelection(availablePowerUps, selectedPowerUps);
         }
 
+        DistributionHelper.setDefaultRarityWeights();
         return selectedPowerUps;
 
         //TODO: complete rate calculation and dynamic scanning

@@ -1,5 +1,7 @@
 package src.GameObject;
 
+import src.PowerUp.Actions.PowerUpAdder;
+
 import java.awt.*;
 import java.awt.event.*;
 import java.util.*;
@@ -21,12 +23,46 @@ public class GamePanel extends JPanel implements Runnable{
 	Paddle paddle2;
 	Ball ball;
 	Score score;
-	
-	GamePanel(){
-		newPaddles();
+
+    private boolean isPaused = false;
+
+    public boolean getIsPaused() {
+        return isPaused;
+    }
+
+    public void setIsPaused(boolean isPaused) {
+        this.isPaused = isPaused;
+    }
+
+    public void toggleIsPaused() {
+        isPaused = !isPaused;
+    }
+
+    private final Point startingPointFirstPlayer = new Point(0, (GAME_HEIGHT/2)-(PADDLE_HEIGHT/2));
+    private final Point startingPointSecondPlayer = new Point(GAME_WIDTH-PADDLE_WIDTH,(GAME_HEIGHT/2)-(PADDLE_HEIGHT/2));
+
+    private ObstacleManager obstacleManager;                  // (kept from previous step)
+    private GameClock gameClock;
+
+    private GameFrame gameFrame;
+
+    public GamePanel(GameFrame gameFrame){
+     random = new Random();
+
+        newPaddles();
 		newBall();
-		score = new Score(GAME_WIDTH,GAME_HEIGHT);
-		this.setFocusable(true);
+
+        // Obstacle init
+        obstacleManager = new ObstacleManager(
+                GAME_WIDTH, GAME_HEIGHT, PADDLE_WIDTH
+        );
+
+        // gameclock()
+        gameClock = new GameClock();
+
+        score = new Score(GAME_WIDTH,GAME_HEIGHT);
+
+        this.setFocusable(true);
 		this.addKeyListener(new AL());
 		this.setPreferredSize(SCREEN_SIZE);
 		
@@ -35,7 +71,6 @@ public class GamePanel extends JPanel implements Runnable{
 	}
 	
 	public void newBall() {
-		random = new Random();
 		ball = new Ball((GAME_WIDTH/2)-(BALL_DIAMETER/2),random.nextInt(GAME_HEIGHT-BALL_DIAMETER),BALL_DIAMETER,BALL_DIAMETER);
 	}
 	public void newPaddles() {
@@ -53,7 +88,9 @@ public class GamePanel extends JPanel implements Runnable{
 		paddle2.draw(g);
 		ball.draw(g);
 		score.draw(g);
-Toolkit.getDefaultToolkit().sync();
+
+        gameClock.draw(g, GAME_WIDTH);
+        Toolkit.getDefaultToolkit().sync();
 
 	}
 	public void move() {
@@ -63,7 +100,7 @@ Toolkit.getDefaultToolkit().sync();
 	}
 	public void checkCollision() {
 		
-		if(ball.y <=0) {
+		if(ball.y <= 0) {
 			ball.setYDirection(-ball.yVelocity);
 		}
 		if(ball.y >= GAME_HEIGHT-BALL_DIAMETER) {
@@ -72,8 +109,11 @@ Toolkit.getDefaultToolkit().sync();
 
 		if(ball.intersects(paddle1)) {
 			ball.xVelocity = Math.abs(ball.xVelocity);
-			ball.xVelocity++; //TODO: consider removing to remove acceleration
-			if(ball.yVelocity>0)
+
+            float paddleForce = paddle1.getHitForce();
+            ball.xVelocity += paddleForce; //TODO: consider removing to remove acceleration
+
+            if(ball.yVelocity>0)
 				ball.yVelocity++; //TODO: consider removing to remove acceleration
 			else
 				ball.yVelocity--;
@@ -82,14 +122,20 @@ Toolkit.getDefaultToolkit().sync();
 		}
 		if(ball.intersects(paddle2)) {
 			ball.xVelocity = Math.abs(ball.xVelocity);
-			ball.xVelocity++; //TODO: consider removing to remove acceleration
-			if(ball.yVelocity>0)
+
+            float paddleForce = paddle2.getHitForce();
+            ball.xVelocity += paddleForce; //TODO: consider removing to remove acceleration
+
+            if(ball.yVelocity>0)
 				ball.yVelocity++; //TODO: consider removing to remove acceleration
 			else
 				ball.yVelocity--;
 			ball.setXDirection(-ball.xVelocity);
 			ball.setYDirection(ball.yVelocity);
 		}
+
+        obstacleManager.handleCollision(ball);
+
 		//TODO: handle this being ignored on certain ability
 		if(paddle1.y<=0)
 			paddle1.y=0;
@@ -102,14 +148,19 @@ Toolkit.getDefaultToolkit().sync();
 
 		if(ball.x <=0) {
 			score.player2++;
-			newPaddles();
-			newBall();
+            PowerUpAdder.createSelectionUI(gameFrame,this, paddle1);
+            paddle1.setLocation(startingPointFirstPlayer);
+            paddle2.setLocation(startingPointSecondPlayer);
+            newBall();
 			System.out.println("Player 2: "+score.player2);
 		}
-		if(ball.x >= GAME_WIDTH-BALL_DIAMETER) {
+
+        if(ball.x >= GAME_WIDTH-BALL_DIAMETER) {
 			score.player1++;
-			newPaddles();
-			newBall();
+            PowerUpAdder.createSelectionUI(gameFrame,this, paddle2);
+            paddle1.setLocation(startingPointFirstPlayer);
+            paddle2.setLocation(startingPointSecondPlayer);
+            newBall();
 			System.out.println("Player 1: "+score.player1);
 		}
 	}
@@ -124,11 +175,15 @@ Toolkit.getDefaultToolkit().sync();
 			long now = System.nanoTime();
 			delta += (now -lastTime)/ns;
 			lastTime = now;
+            obstacleManager.update(ball);
 			if(delta >=1) {
-				move();
 				checkCollision();
 				repaint();
 				delta--;
+                if (isPaused) {
+                    continue;
+                }
+                move();
 			}
 		}
 	}

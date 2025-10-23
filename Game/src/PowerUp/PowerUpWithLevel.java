@@ -2,6 +2,7 @@ package src.PowerUp;
 
 import src.PowerUp.Abstractions.BasePowerUp;
 
+//TODO: possibly refactor to map if applicable
 public class PowerUpWithLevel {
     //TODO: decide whether inheritance or composition is better
     private final BasePowerUp powerUp;

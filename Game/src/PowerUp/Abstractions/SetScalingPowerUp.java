@@ -17,16 +17,25 @@ public abstract class SetScalingPowerUp extends BasePowerUp {
     public float calculateValue(float value, int level) {
         int index = level - 1;
         float levelValue = levels[index];
+        float previousValue = index == 0 ? 0 : levels[index - 1];
 
         switch (operationType) {
             case ADDITION:
-                return value + levelValue;
+                return value - previousValue + levelValue;
             case SUBSTRACTION:
-                return value - levelValue;
+                return value + previousValue - levelValue;
             case MULTIPLICATION:
-                return value * levelValue;
+                if (previousValue == 0) {
+                    previousValue = 1;
+                }
+
+                return value / previousValue * levelValue;
             case DIVISION:
-                return value / levelValue;
+                if (previousValue == 0) {
+                    previousValue = 1;
+                }
+
+                return value * previousValue / levelValue;
             case EXPONENTIAL:
                 //TODO: extract into a helper function later
                 int floored = (int)Math.floor((double) levelValue);
@@ -42,19 +51,34 @@ public abstract class SetScalingPowerUp extends BasePowerUp {
         }
     }
 
-    public SetScalingPowerUp(String name, String description, PowerUpCategoryEnum powerUpCategoryEnum, RarityEnum rarityEnum) {
+    public void setScalingProperties(float[] levels, OperationType operationType) {
+        this.levels = levels;
+        this.operationType = operationType;
+    }
+
+    public SetScalingPowerUp(String name, String description, PowerUpCategoryEnum powerUpCategoryEnum, RarityEnum rarityEnum,
+                             float[] levels, OperationType operationType
+                             ) {
         super(name, description, powerUpCategoryEnum, rarityEnum);
+        setScalingProperties(levels, operationType);
     }
 
-    public SetScalingPowerUp(String name, String description, PowerUpCategoryEnum powerUpCategoryEnum, RarityEnum rarityEnum, int maximumLevel) {
+    public SetScalingPowerUp(String name, String description, PowerUpCategoryEnum powerUpCategoryEnum, RarityEnum rarityEnum, int maximumLevel,
+                             float[] levels, OperationType operationType
+    ) {
         super(name, description, powerUpCategoryEnum, rarityEnum, maximumLevel);
+        setScalingProperties(levels, operationType);
     }
 
-    public SetScalingPowerUp(String name, String description, PowerUpCategoryEnum powerUpCategoryEnum, RarityEnum rarityEnum, String imagePath) {
+    public SetScalingPowerUp(String name, String description, PowerUpCategoryEnum powerUpCategoryEnum, RarityEnum rarityEnum, String imagePath, float[] levels, OperationType operationType
+    ) {
         super(name, description, powerUpCategoryEnum, rarityEnum, imagePath);
+        setScalingProperties(levels, operationType);
     }
 
-    public SetScalingPowerUp(String name, String description, PowerUpCategoryEnum powerUpCategoryEnum, RarityEnum rarityEnum, int maximumLevel, String imagePath) {
+    public SetScalingPowerUp(String name, String description, PowerUpCategoryEnum powerUpCategoryEnum, RarityEnum rarityEnum, int maximumLevel, String imagePath, float[] levels, OperationType operationType
+    ) {
         super(name, description, powerUpCategoryEnum, rarityEnum, maximumLevel, imagePath);
+        setScalingProperties(levels, operationType);
     }
 }
