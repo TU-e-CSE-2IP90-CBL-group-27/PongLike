@@ -1,5 +1,6 @@
 package src.PowerUp.Abstractions;
 
+import src.AssetManager.Sprites.SpriteEnum;
 import src.Enum.PowerUpCategoryEnum;
 import src.Enum.RarityEnum;
 import src.GameObject.Paddle;
@@ -15,30 +16,41 @@ is set by this class
 
 public abstract class BasePowerUp {
     private String name;
+
     public String getName() {
         return name;
     }
+
     public void setName(String name) {
         this.name = name;
     }
+
     private int maximumLevel = 5;
+
     public void setMaximumLevel(int level) {
         maximumLevel = level;
     }
+
     public int getMaximumLevel() {
         return maximumLevel;
     }
+
     private final PowerUpCategoryEnum powerUpCategory;
+
     public PowerUpCategoryEnum getPowerUpCategory() {
         return powerUpCategory;
     }
+
     private String description;
+
     public String getDescription() {
         return description;
     }
-    private String imagePath;
+
+    private SpriteEnum itemSprite;
+
     public Optional<String> getImagePath() {
-        return Optional.ofNullable(imagePath);
+        return Optional.ofNullable(itemSprite.getPath());
     }
 
     private RarityEnum rarityEnum;
@@ -64,13 +76,13 @@ public abstract class BasePowerUp {
         this.maximumLevel = maximumLevel;
     }
 
-    public BasePowerUp(String name, String description, PowerUpCategoryEnum powerUpCategoryEnum, RarityEnum rarityEnum, String imagePath) {
+    public BasePowerUp(String name, String description, PowerUpCategoryEnum powerUpCategoryEnum, RarityEnum rarityEnum, SpriteEnum itemSprite) {
         this(name, description, powerUpCategoryEnum, rarityEnum);
-        this.imagePath = imagePath;
+        this.itemSprite = itemSprite;
     }
 
-    public BasePowerUp(String name, String description, PowerUpCategoryEnum powerUpCategoryEnum, RarityEnum rarityEnum, int maximumLevel, String imagePath) {
+    public BasePowerUp(String name, String description, PowerUpCategoryEnum powerUpCategoryEnum, RarityEnum rarityEnum, int maximumLevel, SpriteEnum itemSprite) {
         this(name, description, powerUpCategoryEnum, rarityEnum, maximumLevel);
-        this.imagePath = imagePath;
+        this.itemSprite = itemSprite;
     }
 }

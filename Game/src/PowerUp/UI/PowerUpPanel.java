@@ -6,7 +6,9 @@ import src.PowerUp.Abstractions.BasePowerUp;
 import javax.swing.*;
 import javax.swing.border.LineBorder;
 import java.awt.*;
+import java.io.File;
 import java.io.IOException;
+import java.net.URL;
 import java.util.Optional;
 
 public class PowerUpPanel extends JPanel {
@@ -34,7 +36,14 @@ public class PowerUpPanel extends JPanel {
 
     private void trySetIcon(GridBagConstraints gridBagConstraints, String string) {
         try {
+            File image = new File(string);
+
+            if (!image.exists()) {
+                throw new Exception("Image file does not exist");
+            }
+
             JLabel iconLabel = new JLabel(new ImageIcon(string));
+            System.out.println(iconLabel.getIcon());
             add(iconLabel, gridBagConstraints);
         }
         catch (NullPointerException exception) {
@@ -42,6 +51,10 @@ public class PowerUpPanel extends JPanel {
             System.out.println("Error: image not loaded correctly for item:" + powerUp.getName());
             System.out.println("Error: " + exception);
             return;
+        }
+        catch (Exception exception) {
+            System.out.println("Error trying to open image:" + powerUp.getName());
+            System.out.println("Error: " + exception);
         }
 
     }
@@ -68,6 +81,7 @@ public class PowerUpPanel extends JPanel {
     private void setIconIfExists(GridBagConstraints gridBagConstraints) {
         Optional<String> powerUpImage = powerUp.getImagePath();
         if (powerUpImage.isEmpty()) {
+            System.out.println("Error: image not loaded correctly for item:" + powerUp.getName());
             return;
         }
 
@@ -90,8 +104,8 @@ public class PowerUpPanel extends JPanel {
         Color mainColor = powerUp.getRarityEnum().getColor();
         System.out.println(mainColor);
         GridBagConstraints gbc = setLayout(mainColor);
-        setIconIfExists(gbc);
         setName(gbc, mainColor);
+        setIconIfExists(gbc);
         setDescription(gbc);
 
         gbc.weighty = 1.0;

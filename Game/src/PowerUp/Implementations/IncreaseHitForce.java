@@ -1,5 +1,6 @@
 package src.PowerUp.Implementations;
 
+import src.AssetManager.Sprites.SpriteEnum;
 import src.Enum.OperationType;
 import src.Enum.PowerUpCategoryEnum;
 import src.Enum.RarityEnum;
@@ -12,7 +13,8 @@ public class IncreaseHitForce extends SetScalingPowerUp {
                 "Stronger hit",
                 "Makes your hits stronger and the ball faster. Makes both your and the opponents game harder",
                 PowerUpCategoryEnum.ATTACK,
-                RarityEnum.COMMON,
+                RarityEnum.RARE,
+                SpriteEnum.ATTACK_AXE,
                 new float[]{1, 2.5f, 5f, 6.5f, 8},
                 OperationType.ADDITION
         );
