@@ -1,5 +1,7 @@
 package src.GameObject;
 
+import src.AssetManager.Sound.SoundEffectEnum;
+import src.AssetManager.Sound.SoundManager;
 import src.PowerUp.Actions.PowerUpAdder;
 
 import java.awt.*;
@@ -43,6 +45,7 @@ public class GamePanel extends JPanel implements Runnable{
 
     private ObstacleManager obstacleManager;                  // (kept from previous step)
     private GameClock gameClock;
+    private SoundManager soundManager;
 
     private GameFrame gameFrame;
 
@@ -109,28 +112,35 @@ public class GamePanel extends JPanel implements Runnable{
 		}
 
 		if(ball.intersects(paddle1)) {
+            SoundManager.loadFileAndPlaySound(SoundEffectEnum.PADDLE_HIT);
 			ball.xVelocity = Math.abs(ball.xVelocity);
 
             float paddleForce = paddle1.getHitForce();
             ball.xVelocity += paddleForce; //TODO: consider removing to remove acceleration
 
             if(ball.yVelocity>0)
-				ball.yVelocity++; //TODO: consider removing to remove acceleration
+				ball.yVelocity += paddleForce; //TODO: consider removing to remove acceleration
 			else
-				ball.yVelocity--;
+				ball.yVelocity -= paddleForce;
+
 			ball.setXDirection(ball.xVelocity);
 			ball.setYDirection(ball.yVelocity);
+
+            // TODO: refactor this
 		}
+
 		if(ball.intersects(paddle2)) {
-			ball.xVelocity = Math.abs(ball.xVelocity);
+            SoundManager.loadFileAndPlaySound(SoundEffectEnum.PADDLE_HIT);
+            ball.xVelocity = Math.abs(ball.xVelocity);
 
             float paddleForce = paddle2.getHitForce();
             ball.xVelocity += paddleForce; //TODO: consider removing to remove acceleration
 
             if(ball.yVelocity>0)
-				ball.yVelocity++; //TODO: consider removing to remove acceleration
+				ball.yVelocity += paddleForce; //TODO: consider removing to remove acceleration
 			else
-				ball.yVelocity--;
+				ball.yVelocity -= paddleForce;
+
 			ball.setXDirection(-ball.xVelocity);
 			ball.setYDirection(ball.yVelocity);
 		}
