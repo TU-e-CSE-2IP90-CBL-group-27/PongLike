@@ -1,5 +1,7 @@
 package src.PowerUp.UI;
 
+import src.AssetManager.Sound.SoundEffectEnum;
+import src.AssetManager.Sound.SoundManager;
 import src.GameObject.GameFrame;
 import src.GameObject.GamePanel;
 import src.GameObject.Paddle;
@@ -34,6 +36,7 @@ public class PowerUpSelectionWindow extends JDialog {
 
     public void selectPowerUp(BasePowerUp powerUp) {
         PowerUpAdder.addPowerUpToPlayer(player, powerUp);
+        SoundManager.playSound(SoundEffectEnum.POWER_UP_SELECT);
         mainGame.toggleIsPaused();
         this.dispose();
     }

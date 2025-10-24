@@ -112,7 +112,7 @@ public class GamePanel extends JPanel implements Runnable{
 		}
 
 		if(ball.intersects(paddle1)) {
-            SoundManager.loadFileAndPlaySound(SoundEffectEnum.PADDLE_HIT);
+            SoundManager.playSound(SoundEffectEnum.PADDLE_HIT);
 			ball.xVelocity = Math.abs(ball.xVelocity);
 
             float paddleForce = paddle1.getHitForce();
@@ -130,7 +130,7 @@ public class GamePanel extends JPanel implements Runnable{
 		}
 
 		if(ball.intersects(paddle2)) {
-            SoundManager.loadFileAndPlaySound(SoundEffectEnum.PADDLE_HIT);
+            SoundManager.playSound(SoundEffectEnum.PADDLE_HIT);
             ball.xVelocity = Math.abs(ball.xVelocity);
 
             float paddleForce = paddle2.getHitForce();
@@ -159,6 +159,7 @@ public class GamePanel extends JPanel implements Runnable{
 
 		if(ball.x <=0) {
 			score.player2++;
+            SoundManager.playSound(SoundEffectEnum.GOAL);
             PowerUpAdder.createSelectionUI(gameFrame,this, paddle1);
             paddle1.setLocation(startingPointFirstPlayer);
             paddle2.setLocation(startingPointSecondPlayer);
@@ -168,6 +169,7 @@ public class GamePanel extends JPanel implements Runnable{
 
         if(ball.x >= GAME_WIDTH-BALL_DIAMETER) {
 			score.player1++;
+            SoundManager.playSound(SoundEffectEnum.GOAL);
             PowerUpAdder.createSelectionUI(gameFrame,this, paddle2);
             paddle1.setLocation(startingPointFirstPlayer);
             paddle2.setLocation(startingPointSecondPlayer);

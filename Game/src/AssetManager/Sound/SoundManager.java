@@ -9,10 +9,10 @@ import java.io.IOException;
 import java.net.URL;
 
 public class SoundManager {
-    public static void loadFileAndPlaySound(SoundEffectEnum sound) {
+    public static void playSound(SoundEffectEnum sound) {
         try  {
             URL audio = new URL("file:" + sound.getPath());
-            playSound(audio);
+            playSoundFile(audio);
         }
         catch (IOException exception) {
             System.out.println("Error while loading file to play sound" +  exception.getMessage());
@@ -20,7 +20,7 @@ public class SoundManager {
         }
     }
 
-    public static void playSound(URL audio) {
+    public static void playSoundFile(URL audio) {
         try {
             AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(audio);
             Clip clip = AudioSystem.getClip();
