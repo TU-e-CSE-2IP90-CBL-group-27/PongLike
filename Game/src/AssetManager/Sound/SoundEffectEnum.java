@@ -1,10 +1,10 @@
 package src.AssetManager.Sound;
 
 public enum SoundEffectEnum {
-    PADDLE_HIT("Game/Assets/paddle-hit.wav"),
-    GOAL("Game/Assets/goal.wav"),
-    POWER_UP_SELECT("./Game/Assets/power-up.wav"),
-    BRICK_HIT("./Game/Assets/brick-hit.wav");
+    PADDLE_HIT("Game/Assets/Sound/paddle-hit.wav"),
+    GOAL("Game/Assets/Sound/goal.wav"),
+    POWER_UP_SELECT("Game/Assets/Sound/power-up.wav"),
+    BRICK_HIT("Game/Assets/Sound/brick-hit.wav");
 
     private String path;
 

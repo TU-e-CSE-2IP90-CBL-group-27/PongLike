@@ -1,5 +1,6 @@
 package src.PowerUp.Abstractions;
 
+import src.AssetManager.Sprites.SpriteEnum;
 import src.Enum.OperationType;
 import src.Enum.RarityEnum;
 import src.Enum.PowerUpCategoryEnum;
@@ -70,15 +71,15 @@ public abstract class SetScalingPowerUp extends BasePowerUp {
         setScalingProperties(levels, operationType);
     }
 
-    public SetScalingPowerUp(String name, String description, PowerUpCategoryEnum powerUpCategoryEnum, RarityEnum rarityEnum, String imagePath, float[] levels, OperationType operationType
+    public SetScalingPowerUp(String name, String description, PowerUpCategoryEnum powerUpCategoryEnum, RarityEnum rarityEnum, SpriteEnum itemSprite, float[] levels, OperationType operationType
     ) {
-        super(name, description, powerUpCategoryEnum, rarityEnum, imagePath);
+        super(name, description, powerUpCategoryEnum, rarityEnum, itemSprite);
         setScalingProperties(levels, operationType);
     }
 
-    public SetScalingPowerUp(String name, String description, PowerUpCategoryEnum powerUpCategoryEnum, RarityEnum rarityEnum, int maximumLevel, String imagePath, float[] levels, OperationType operationType
+    public SetScalingPowerUp(String name, String description, PowerUpCategoryEnum powerUpCategoryEnum, RarityEnum rarityEnum, int maximumLevel, SpriteEnum itemSprite, float[] levels, OperationType operationType
     ) {
-        super(name, description, powerUpCategoryEnum, rarityEnum, maximumLevel, imagePath);
+        super(name, description, powerUpCategoryEnum, rarityEnum, maximumLevel, itemSprite);
         setScalingProperties(levels, operationType);
     }
 }

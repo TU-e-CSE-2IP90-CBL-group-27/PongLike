@@ -1,5 +1,6 @@
 package src.PowerUp.Implementations;
 
+import src.AssetManager.Sprites.SpriteEnum;
 import src.Enum.OperationType;
 import src.Enum.PowerUpCategoryEnum;
 import src.Enum.RarityEnum;
@@ -12,8 +13,8 @@ public class IncreaseSize extends SetScalingPowerUp {
                 "Bigger paddle",
                 "Makes your paddle larger. Very useful for defense but limits attack angles a bit",
                 PowerUpCategoryEnum.DEFENSE,
-                RarityEnum.RARE,
-                5,
+                RarityEnum.COMMON,
+                SpriteEnum.LARGE_BRICK,
                 new float[]{10, 25, 50f, 65f, 80},
                 OperationType.ADDITION
 
