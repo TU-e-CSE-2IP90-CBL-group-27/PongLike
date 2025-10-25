@@ -6,6 +6,7 @@ import src.GameObject.Paddle;
 import src.PowerUp.Abstractions.BasePowerUp;
 import src.PowerUp.Helper.PowerUpSelector;
 import src.PowerUp.PowerUpWithLevel;
+import src.PowerUp.UI.PowerUpInfo;
 import src.PowerUp.UI.PowerUpSelectionWindow;
 
 import javax.swing.*;
@@ -19,10 +20,10 @@ public class PowerUpAdder {
                 player.getPowerUpChoiceAmount());
     }
 
-    public static void createSelectionUI(GameFrame gameFrame, GamePanel gamePanel, Paddle player) {
+    public static void createSelectionUI(GameFrame gameFrame, GamePanel gamePanel, Paddle player, PowerUpInfo powerUpInfo) {
         ArrayList<BasePowerUp> powerUps = selectPotentialPowerUps(player);
         PowerUpSelectionWindow.init(
-                gameFrame, gamePanel, powerUps, player
+                gameFrame, gamePanel, powerUps, player, powerUpInfo
         );
     }
 

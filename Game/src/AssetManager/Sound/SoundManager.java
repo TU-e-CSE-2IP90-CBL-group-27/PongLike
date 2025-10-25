@@ -26,7 +26,6 @@ public class SoundManager {
             Clip clip = AudioSystem.getClip();
             clip.open(audioInputStream);
             clip.start();
-            System.out.println(clip.isRunning());
         }
         catch (Exception exception) {
             System.out.println("Error while playing sound " +  exception.getMessage());

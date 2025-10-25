@@ -2,6 +2,7 @@ package src.PowerUp.UI;
 
 import src.Enum.RarityEnum;
 import src.PowerUp.Abstractions.BasePowerUp;
+import src.PowerUp.PowerUpWithLevel;
 
 import javax.swing.*;
 import javax.swing.border.LineBorder;
@@ -9,17 +10,18 @@ import java.awt.*;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.Optional;
 
 public class PowerUpPanel extends JPanel {
     private BasePowerUp powerUp;
+    private ArrayList<PowerUpWithLevel> currentPowerUps;
     //TODO: maybe display current level as well
 
     private GridBagConstraints setLayout(Color maincolor) {
         setBorder(BorderFactory.createLineBorder(maincolor));
         setLayout(new GridBagLayout());
 
-        //Sets the main layout
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.gridwidth = GridBagConstraints.REMAINDER;
         gbc.insets = new Insets(10, 10, 10, 10);
@@ -95,8 +97,22 @@ public class PowerUpPanel extends JPanel {
         add(rarityLabel, gridBagConstraints);
     }
 
+    private int getCurrentLevel() {
+        PowerUpWithLevel powerUpWithLevel = currentPowerUps.stream()
+                .filter(x -> x.getPowerUp().getName().equals(powerUp.getName()))
+                .findFirst().orElse(null);
+
+        if (powerUpWithLevel == null) {
+            return 0;
+        }
+
+        return powerUpWithLevel.getLevel();
+    }
+
     private void setMaxLevel(GridBagConstraints gridBagConstraints) {
-        JLabel maxLevelLabel = new JLabel("Max level:" + powerUp.getMaximumLevel());
+        int currentLevel = getCurrentLevel();
+        String message = String.format("Level: %,d / %,d", currentLevel, powerUp.getMaximumLevel());
+        JLabel maxLevelLabel = new JLabel(message);
         add(maxLevelLabel, gridBagConstraints);
     }
 
@@ -132,8 +148,10 @@ public class PowerUpPanel extends JPanel {
         add(selectButton, gridBagConstraints);
     }
 
-    public PowerUpPanel(PowerUpSelectionWindow selectionFrame, BasePowerUp powerUp) {
+    public PowerUpPanel(PowerUpSelectionWindow selectionFrame, BasePowerUp powerUp, ArrayList<PowerUpWithLevel> currentPowerUps) {
         this.powerUp = powerUp;
+        this.currentPowerUps = currentPowerUps;
+
         this.createPowerUpPanel(selectionFrame);
     }
 }

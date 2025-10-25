@@ -18,11 +18,14 @@ public class PowerUpSelectionWindow extends JDialog {
 
     private GamePanel mainGame;
 
-    public PowerUpSelectionWindow(GameFrame gameFrame, GamePanel gamePanel, List<BasePowerUp> powerUps, Paddle player) {
+    private PowerUpInfo powerUpInfo;
+
+    public PowerUpSelectionWindow(GameFrame gameFrame, GamePanel gamePanel, List<BasePowerUp> powerUps, Paddle player, PowerUpInfo powerUpInfo) {
         super(gameFrame, "Choose Your Power-Up!", true);
         gamePanel.toggleIsPaused();
         this.player = player;
         this.mainGame = gamePanel;
+        this.powerUpInfo = powerUpInfo;
         setSize(800, 600);
         setLocationRelativeTo(null);
         setResizable(false);
@@ -30,21 +33,23 @@ public class PowerUpSelectionWindow extends JDialog {
         JPanel mainPanel = new JPanel(new GridLayout(1, powerUps.size(), 20, 20));
         mainPanel.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
 
-        powerUps.forEach(x -> mainPanel.add(new PowerUpPanel(this, x)));
+        powerUps.forEach(x -> mainPanel.add(new PowerUpPanel(this, x, player.getPowerUps())));
         add(mainPanel);
     }
 
     public void selectPowerUp(BasePowerUp powerUp) {
         PowerUpAdder.addPowerUpToPlayer(player, powerUp);
         SoundManager.playSound(SoundEffectEnum.POWER_UP_SELECT);
+        powerUpInfo.refresh(player.getPowerUps());
+        mainGame.positionPowerUpInfo();
         mainGame.toggleIsPaused();
         this.dispose();
     }
 
-    public static void init(GameFrame gameFrame, GamePanel gamePanel, List<BasePowerUp> powerUps, Paddle player) {
+    public static void init(GameFrame gameFrame, GamePanel gamePanel, List<BasePowerUp> powerUps, Paddle player, PowerUpInfo powerUpInfo) {
         SwingUtilities.invokeLater(
                 () -> {
-                    new PowerUpSelectionWindow(gameFrame, gamePanel, powerUps, player).setVisible(true
+                    new PowerUpSelectionWindow(gameFrame, gamePanel, powerUps, player, powerUpInfo).setVisible(true
                     );
                 }
         );
