@@ -1,5 +1,8 @@
 package src.GameObject;
 
+import src.AssetManager.Sound.SoundEffectEnum;
+import src.AssetManager.Sound.SoundManager;
+
 import java.awt.*;
 import java.util.Random;
 
@@ -68,6 +71,7 @@ public class ObstacleManager {
     public void handleCollision(Ball ball) {
         if (obstacle == null || !ball.intersects(obstacle)) return;
 
+        SoundManager.playSound(SoundEffectEnum.BRICK_HIT);
         Rectangle inter = ball.intersection(obstacle);
         if (inter.width < inter.height) {
             ball.setXDirection(-ball.xVelocity);
