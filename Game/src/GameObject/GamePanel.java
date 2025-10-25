@@ -3,6 +3,7 @@ package src.GameObject;
 import src.AssetManager.Sound.SoundEffectEnum;
 import src.AssetManager.Sound.SoundManager;
 import src.PowerUp.Actions.PowerUpAdder;
+import src.PowerUp.UI.PowerUpInfo;
 
 import java.awt.*;
 import java.awt.event.*;
@@ -17,8 +18,9 @@ public class GamePanel extends JPanel implements Runnable{
 	static final int BALL_DIAMETER = 20;
 	static final int PADDLE_WIDTH = 25;
 	static final int PADDLE_HEIGHT = 100;
-	Thread gameThread;
-	Image image;
+
+    Thread gameThread;
+    Image image;
 	Graphics graphics;
 	Random random;
 	Paddle paddle1;
@@ -45,13 +47,17 @@ public class GamePanel extends JPanel implements Runnable{
 
     private ObstacleManager obstacleManager;                  // (kept from previous step)
     private GameClock gameClock;
-    private SoundManager soundManager;
+
+    public PowerUpInfo powerUpInfoPlayerOne;
+
+    public PowerUpInfo powerUpInfoPlayerTwo;
 
     private GameFrame gameFrame;
 
     public GamePanel(GameFrame gameFrame){
-     random = new Random();
+        random = new Random();
 
+        setLayout(null);
         newPaddles();
 		newBall();
 
@@ -68,6 +74,12 @@ public class GamePanel extends JPanel implements Runnable{
         this.setFocusable(true);
 		this.addKeyListener(new AL());
 		this.setPreferredSize(SCREEN_SIZE);
+
+        this.powerUpInfoPlayerOne = new PowerUpInfo();
+        this.powerUpInfoPlayerTwo = new PowerUpInfo();
+        add(powerUpInfoPlayerOne);
+        add(powerUpInfoPlayerTwo);
+        positionPowerUpInfo();
 		
 		gameThread = new Thread(this);
 		gameThread.start();
@@ -80,7 +92,10 @@ public class GamePanel extends JPanel implements Runnable{
 		paddle1 = new Paddle(0,(GAME_HEIGHT/2)-(PADDLE_HEIGHT/2),PADDLE_WIDTH,PADDLE_HEIGHT,1);
 		paddle2 = new Paddle(GAME_WIDTH-PADDLE_WIDTH,(GAME_HEIGHT/2)-(PADDLE_HEIGHT/2),PADDLE_WIDTH,PADDLE_HEIGHT,2);
 	}
-	public void paint(Graphics g) {
+
+    @Override
+	public void paintComponent(Graphics g) {
+        super.paintComponent(g);
 		image = createImage(getWidth(),getHeight());
 		graphics = image.getGraphics();
 		draw(graphics);
@@ -160,7 +175,7 @@ public class GamePanel extends JPanel implements Runnable{
 		if(ball.x <=0) {
 			score.player2++;
             SoundManager.playSound(SoundEffectEnum.GOAL);
-            PowerUpAdder.createSelectionUI(gameFrame,this, paddle1);
+            PowerUpAdder.createSelectionUI(gameFrame,this, paddle1, powerUpInfoPlayerOne);
             paddle1.setLocation(startingPointFirstPlayer);
             paddle2.setLocation(startingPointSecondPlayer);
             newBall();
@@ -170,13 +185,24 @@ public class GamePanel extends JPanel implements Runnable{
         if(ball.x >= GAME_WIDTH-BALL_DIAMETER) {
 			score.player1++;
             SoundManager.playSound(SoundEffectEnum.GOAL);
-            PowerUpAdder.createSelectionUI(gameFrame,this, paddle2);
+            PowerUpAdder.createSelectionUI(gameFrame,this, paddle2, powerUpInfoPlayerTwo);
             paddle1.setLocation(startingPointFirstPlayer);
             paddle2.setLocation(startingPointSecondPlayer);
             newBall();
 			System.out.println("Player 1: "+score.player1);
 		}
 	}
+
+    public void positionPowerUpInfo() {
+        int margin = 20;
+
+        Dimension p1Size = powerUpInfoPlayerOne.getPreferredSize();
+        powerUpInfoPlayerOne.setBounds(margin, margin, p1Size.width, p1Size.height);
+
+        Dimension p2Size = powerUpInfoPlayerTwo.getPreferredSize();
+        powerUpInfoPlayerTwo.setBounds(getWidth() - p2Size.width - margin, margin, p2Size.width, p2Size.height);
+    }
+
 	public void run() {
 		//game loop
 		long lastTime = System.nanoTime();
