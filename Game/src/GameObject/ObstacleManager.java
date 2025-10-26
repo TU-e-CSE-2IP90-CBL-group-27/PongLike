@@ -2,6 +2,8 @@ package src.GameObject;
 
 import src.AssetManager.Sound.SoundEffectEnum;
 import src.AssetManager.Sound.SoundManager;
+import src.GameValuesManager.MainValues;
+import src.GameValuesManager.MainValuesConstants;
 
 import java.awt.*;
 import java.util.Random;
@@ -14,9 +16,8 @@ import java.util.Random;
  * Rendering the obstacle
  */
 public class ObstacleManager {
-    private static final long OBSTACLE_INTERVAL_NANOS = 10_000_000_000L; // 10 seconds
     private static final int PADDLE_SAFE_MARGIN = 150;
-    private static final int MAX_SPAWN_ATTEMPTS = 30;
+    private static final int MAX_SPAWN_ATTEMPTS = 50;
 
     private final int gameWidth;
     private final int gameHeight;
@@ -36,7 +37,7 @@ public class ObstacleManager {
 
     public void update(Ball ball) {
         long now = System.nanoTime();
-        if (now - lastSpawnNs >= OBSTACLE_INTERVAL_NANOS) {
+        if (now - lastSpawnNs >= MainValues.getObstacleIntervalNanos()) {
             spawnNewObstacle(ball);
             lastSpawnNs = now;
         }
@@ -47,7 +48,7 @@ public class ObstacleManager {
         int maxX = gameWidth - paddleWidth - PADDLE_SAFE_MARGIN - Obstacle.WIDTH;
         if (maxX <= minX) return;
 
-        int maxY = gameHeight - Obstacle.HEIGHT;
+        int maxY = gameHeight - MainValues.getObstacleHeight();
         if (maxY < 0) return;
 
         for (int i = 0; i < MAX_SPAWN_ATTEMPTS; i++) {
@@ -63,9 +64,9 @@ public class ObstacleManager {
         // fallback center spawn
         obstacle = new Obstacle(
             minX + (maxX - minX) / 2,
-            Math.max(0, Math.min(gameHeight - Obstacle.HEIGHT, (gameHeight - Obstacle.HEIGHT) / 2))
-
+            Math.max(0, Math.min(gameHeight - MainValues.getObstacleHeight(), (gameHeight - MainValues.getObstacleHeight()) / 2))
         );
+        // TODO: fix bug when its in the ball
     }
 
     public void handleCollision(Ball ball) {

@@ -2,6 +2,7 @@ package src.GameObject;
 
 import src.AssetManager.Sound.SoundEffectEnum;
 import src.AssetManager.Sound.SoundManager;
+import src.GameValuesManager.MainValues;
 import src.PowerUp.Actions.PowerUpAdder;
 import src.PowerUp.UI.PowerUpInfo;
 
@@ -15,7 +16,6 @@ public class GamePanel extends JPanel implements Runnable{
 	static final int GAME_WIDTH = 1000;
 	static final int GAME_HEIGHT = (int)(GAME_WIDTH * (0.5555));
 	static final Dimension SCREEN_SIZE = new Dimension(GAME_WIDTH,GAME_HEIGHT);
-	static final int BALL_DIAMETER = 20;
 	static final int PADDLE_WIDTH = 25;
 	static final int PADDLE_HEIGHT = 100;
 
@@ -86,7 +86,8 @@ public class GamePanel extends JPanel implements Runnable{
 	}
 	
 	public void newBall() {
-		ball = new Ball((GAME_WIDTH/2)-(BALL_DIAMETER/2),random.nextInt(GAME_HEIGHT-BALL_DIAMETER),BALL_DIAMETER,BALL_DIAMETER);
+        int ballDiameter = MainValues.getBallDiameter();
+		ball = new Ball((GAME_WIDTH/2)-(ballDiameter/2),random.nextInt(GAME_HEIGHT-ballDiameter),ballDiameter,ballDiameter);
 	}
 	public void newPaddles() {
 		paddle1 = new Paddle(0,(GAME_HEIGHT/2)-(PADDLE_HEIGHT/2),PADDLE_WIDTH,PADDLE_HEIGHT,1);
@@ -122,7 +123,7 @@ public class GamePanel extends JPanel implements Runnable{
 		if(ball.y <= 0) {
 			ball.setYDirection(-ball.yVelocity);
 		}
-		if(ball.y >= GAME_HEIGHT-BALL_DIAMETER) {
+		if(ball.y >= GAME_HEIGHT-MainValues.getBallDiameter()) {
 			ball.setYDirection(-ball.yVelocity);
 		}
 
@@ -182,7 +183,7 @@ public class GamePanel extends JPanel implements Runnable{
 			System.out.println("Player 2: "+score.player2);
 		}
 
-        if(ball.x >= GAME_WIDTH-BALL_DIAMETER) {
+        if(ball.x >= GAME_WIDTH-MainValues.getBallDiameter()) {
 			score.player1++;
             SoundManager.playSound(SoundEffectEnum.GOAL);
             PowerUpAdder.createSelectionUI(gameFrame,this, paddle2, powerUpInfoPlayerTwo);

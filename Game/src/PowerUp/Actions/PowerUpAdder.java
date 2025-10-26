@@ -25,6 +25,8 @@ public class PowerUpAdder {
         PowerUpSelectionWindow.init(
                 gameFrame, gamePanel, powerUps, player, powerUpInfo
         );
+
+        // TODO: maybe handle stuff form the main game in here, like refrehshing the item panel and unpausing the game, if possible of course
     }
 
     public static void addPowerUpToPlayer(Paddle player, BasePowerUp powerUp
