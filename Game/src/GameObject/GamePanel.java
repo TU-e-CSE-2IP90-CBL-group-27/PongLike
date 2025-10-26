@@ -121,6 +121,20 @@ public class GamePanel extends JPanel implements Runnable{
 		ball.move();
 	}
 
+    public void decreaseScoreUse(Paddle player) {
+        if (player.equals(paddle1)) {
+            score.player2--;
+            return;
+        }
+
+        score.player1--;
+    }
+
+    public void swapScores() {
+        int inter = score.player1;
+        score.player1 = score.player2;
+        score.player2 = inter;
+    }
 
 	public void checkCollision() {
 		

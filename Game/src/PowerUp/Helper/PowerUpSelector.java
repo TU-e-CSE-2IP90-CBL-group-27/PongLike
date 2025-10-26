@@ -31,7 +31,7 @@ public class PowerUpSelector {
         List<RarityEnum> possibleRarities = powerUpsPerRarity.stream()
                 .filter(x -> !x.isEmpty())
                 .map(RarityWithPowerUps::getRarityEnum)
-                .sorted((x, y) -> (int)Math.floor(x.getWeight() - y.getWeight()))
+                .sorted((x, y) -> (int)Math.floor(y.getWeight() - x.getWeight()))
                 .toList();
 
         System.out.println(possibleRarities.size() + " resulting size");

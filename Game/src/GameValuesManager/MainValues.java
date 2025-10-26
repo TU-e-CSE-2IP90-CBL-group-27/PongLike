@@ -34,6 +34,7 @@ public class MainValues {
         OBSTACLE_AMOUNT = obstacleAmount;
     }
 
+
     public static void incrementObstacleAmount() {
         OBSTACLE_AMOUNT += 1;
     }
