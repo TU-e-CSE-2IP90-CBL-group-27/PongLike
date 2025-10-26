@@ -1,28 +1,29 @@
 package src.GameObject;
 
-import src.PowerUp.Actions.PowerUpAdder;
-
 import java.awt.*;
 import java.awt.event.*;
 import java.util.*;
 import javax.swing.*;
+import src.AI.AIPaddleController;
+import src.Menu.DeployMenu;
+import src.PowerUp.Actions.PowerUpAdder;
 
 public class GamePanel extends JPanel implements Runnable{
 
-	static final int GAME_WIDTH = 1000;
-	static final int GAME_HEIGHT = (int)(GAME_WIDTH * (0.5555));
-	static final Dimension SCREEN_SIZE = new Dimension(GAME_WIDTH,GAME_HEIGHT);
-	static final int BALL_DIAMETER = 20;
-	static final int PADDLE_WIDTH = 25;
-	static final int PADDLE_HEIGHT = 100;
-	Thread gameThread;
-	Image image;
-	Graphics graphics;
-	Random random;
-	Paddle paddle1;
-	Paddle paddle2;
-	Ball ball;
-	Score score;
+    static final int GAME_WIDTH = 1000;
+    static final int GAME_HEIGHT = (int)(GAME_WIDTH * (0.5555));
+    static final Dimension SCREEN_SIZE = new Dimension(GAME_WIDTH,GAME_HEIGHT);
+    static final int BALL_DIAMETER = 20;
+    static final int PADDLE_WIDTH = 25;
+    static final int PADDLE_HEIGHT = 100;
+    Thread gameThread;
+    Image image;
+    Graphics graphics;
+    Random random;
+    Paddle paddle1;
+    Paddle paddle2;
+    Ball ball;
+    Score score;
 
     private boolean isPaused = false;
 
@@ -41,13 +42,23 @@ public class GamePanel extends JPanel implements Runnable{
     private final Point startingPointFirstPlayer = new Point(0, (GAME_HEIGHT/2)-(PADDLE_HEIGHT/2));
     private final Point startingPointSecondPlayer = new Point(GAME_WIDTH-PADDLE_WIDTH,(GAME_HEIGHT/2)-(PADDLE_HEIGHT/2));
 
-    private ObstacleManager obstacleManager;                  // (kept from previous step)
+    private ObstacleManager obstacleManager;                  
     private GameClock gameClock;
 
     private GameFrame gameFrame;
 
+    
+    private enum Mode { MENU, PLAYING }
+    private Mode mode = Mode.MENU;          // start in menu
+    private boolean aiEnabled = false;      
+
+    private DeployMenu menu;                     
+    private AIPaddleController aiController; 
+
+
     public GamePanel(GameFrame gameFrame){
-     random = new Random();
+		this.gameFrame = gameFrame;
+     	random = new Random();
 
         newPaddles();
 		newBall();
@@ -61,6 +72,11 @@ public class GamePanel extends JPanel implements Runnable{
         gameClock = new GameClock();
 
         score = new Score(GAME_WIDTH,GAME_HEIGHT);
+
+        
+        menu = new src.Menu.DeployMenu();
+        aiController = new AIPaddleController(PADDLE_HEIGHT, BALL_DIAMETER);
+        
 
         this.setFocusable(true);
 		this.addKeyListener(new AL());
@@ -91,12 +107,28 @@ public class GamePanel extends JPanel implements Runnable{
 
         obstacleManager.draw(graphics);
         gameClock.draw(g, GAME_WIDTH);
+
+        
+        if (mode == Mode.MENU) {
+            menu.draw(g, GAME_WIDTH, GAME_HEIGHT);
+        }
+        
+
         Toolkit.getDefaultToolkit().sync();
 
 	}
 	public void move() {
 		paddle1.move();
-		paddle2.move();
+
+        
+        if (aiEnabled) 
+		{
+            aiController.update(paddle2, ball, GAME_WIDTH, GAME_HEIGHT);
+        } else {
+            paddle2.move();
+        }
+        
+
 		ball.move();
 	}
 	public void checkCollision() {
@@ -176,6 +208,15 @@ public class GamePanel extends JPanel implements Runnable{
 			long now = System.nanoTime();
 			delta += (now -lastTime)/ns;
 			lastTime = now;
+
+           
+            if (mode == Mode.MENU || isPaused) {
+                repaint();
+                continue;
+
+            }
+            
+
             obstacleManager.update(ball);
 			if(delta >=1) {
 				checkCollision();
@@ -190,12 +231,39 @@ public class GamePanel extends JPanel implements Runnable{
 	}
 	public class AL extends KeyAdapter{
 		public void keyPressed(KeyEvent e) {
+
+            
+            //Menu selection
+            if (mode == Mode.MENU) {
+                if (e.getKeyCode() == KeyEvent.VK_1) { 
+                    aiEnabled = false;
+                    mode = Mode.PLAYING;
+                    return;
+                } else if (e.getKeyCode() == KeyEvent.VK_2) { 
+                    aiEnabled = true;
+                    mode = Mode.PLAYING;
+                    return;
+                }
+                return; 
+            }
+            
+
 			paddle1.keyPressed(e);
-			paddle2.keyPressed(e);
+
+            
+            if (!aiEnabled) {
+                paddle2.keyPressed(e);
+            }
+            
 		}
 		public void keyReleased(KeyEvent e) {
 			paddle1.keyReleased(e);
-			paddle2.keyReleased(e);
+
+            
+            if (!aiEnabled) {
+                paddle2.keyReleased(e);
+            }
+            
 		}
 	}
 }
