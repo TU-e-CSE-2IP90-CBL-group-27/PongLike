@@ -9,13 +9,22 @@ public class MainValues {
     private static float LEGENDARY_CHANCE = MainValuesConstants.LEGENDARY_CHANCE;
     private static float INSANE_CHANCE = MainValuesConstants.INSANE_CHANCE;
     private static int OBSTACLE_AMOUNT = MainValuesConstants.OBSTACLE_AMOUNT;
+    private static int OBSTACLE_WIDTH = MainValuesConstants.OBSTACLE_WIDTH;
 
     public static float getCommonChance() {
         return COMMON_CHANCE;
     }
 
+    public static int getObstacleWidth() {
+        return OBSTACLE_WIDTH;
+    }
+
     public static float getRareChance() {
         return RARE_CHANCE;
+    }
+
+    public static void setObstacleWidth(int obstacleWidth) {
+        OBSTACLE_WIDTH = obstacleWidth;
     }
 
     public static float getInsaneChance() {

@@ -37,15 +37,19 @@ public class DistributionHelper {
         }
 
         double minimumValue = Arrays.stream(weights).findFirst().orElse(100);
+        System.out.println("Minumum value " + minimumValue);
         double[] ratios = Arrays.stream(weights)
-                .map(x -> minimumValue / x)
+                .map(x -> x / minimumValue )
                 .toArray();
 
         double ratioSum = Arrays.stream(ratios).sum();
-        double baseChance = difference / ratioSum;
+        System.out.println("Ratio sum" + ratioSum);
+        double baseChance = 100 / ratioSum;
+        System.out.println(baseChance);
 
         for (int i = 0; i < weights.length; i++) {
-            rarities.get(i).setWeight((float)(baseChance * weights[i]));
+            System.out.println("Base " + baseChance + " ratio " + ratios[i]);
+            rarities.get(i).setWeight((float)(baseChance * ratios[i]));
         }
     }
 

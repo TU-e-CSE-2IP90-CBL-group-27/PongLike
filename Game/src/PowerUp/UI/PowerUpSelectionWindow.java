@@ -38,6 +38,9 @@ public class PowerUpSelectionWindow extends JDialog {
         this.mainGame = gamePanel;
         this.powerUpInfo = powerUpInfo;
         this.powerUps.addAll(powerUps);
+
+        setDefaultCloseOperation(JDialog.DO_NOTHING_ON_CLOSE);
+
         paintPowerUps();
     }
 

@@ -55,7 +55,7 @@ public class ObstacleManager {
 
     private void spawnNewObstacle(Ball ball) {
         int minX = paddleWidth + PADDLE_SAFE_MARGIN;
-        int maxX = gameWidth - paddleWidth - PADDLE_SAFE_MARGIN - Obstacle.WIDTH;
+        int maxX = gameWidth - paddleWidth - PADDLE_SAFE_MARGIN - MainValues.getObstacleWidth();
         if (maxX <= minX) return;
 
         int maxY = gameHeight - MainValues.getObstacleHeight();

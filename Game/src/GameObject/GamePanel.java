@@ -32,14 +32,6 @@ public class GamePanel extends JPanel implements Runnable{
 
     private int pauseCount = 0;
 
-    public boolean getIsPaused() {
-        return pauseCount > 0;
-    }
-
-    public void setIsPaused(int paused) {
-        this.pauseCount = paused;
-    }
-
     public void incrementIsPaused() {
         pauseCount++;
     }
@@ -48,11 +40,11 @@ public class GamePanel extends JPanel implements Runnable{
         pauseCount--;
     }
 
-    private final Point startingPointFirstPlayer = new Point(0, (GAME_HEIGHT/2)-(PADDLE_HEIGHT/2));
-    private final Point startingPointSecondPlayer = new Point(GAME_WIDTH-PADDLE_WIDTH,(GAME_HEIGHT/2)-(PADDLE_HEIGHT/2));
+    private final Point startingPointFirstPlayer = new Point(10, (GAME_HEIGHT/2)-(PADDLE_HEIGHT/2));
+    private final Point startingPointSecondPlayer = new Point(GAME_WIDTH-PADDLE_WIDTH - 10,(GAME_HEIGHT/2)-(PADDLE_HEIGHT/2));
 
-    private ObstacleManager obstacleManager;                  // (kept from previous step)
-    private GameClock gameClock;
+    private final ObstacleManager obstacleManager;                  // (kept from previous step)
+    private final GameClock gameClock;
 
     public PowerUpInfo powerUpInfoPlayerOne;
 
@@ -96,8 +88,8 @@ public class GamePanel extends JPanel implements Runnable{
 		ball = new Ball((GAME_WIDTH/2)-(ballDiameter/2),random.nextInt(GAME_HEIGHT-ballDiameter),ballDiameter,ballDiameter);
 	}
 	public void newPaddles() {
-		paddle1 = new Paddle(0,(GAME_HEIGHT/2)-(PADDLE_HEIGHT/2),PADDLE_WIDTH,PADDLE_HEIGHT,1);
-		paddle2 = new Paddle(GAME_WIDTH-PADDLE_WIDTH,(GAME_HEIGHT/2)-(PADDLE_HEIGHT/2),PADDLE_WIDTH,PADDLE_HEIGHT,2);
+		paddle1 = new Paddle(startingPointFirstPlayer, PADDLE_WIDTH, PADDLE_HEIGHT, 1);
+		paddle2 = new Paddle(startingPointSecondPlayer, PADDLE_WIDTH, PADDLE_HEIGHT , 2);
 	}
 
     @Override
@@ -177,7 +169,7 @@ public class GamePanel extends JPanel implements Runnable{
             ball.xVelocity += paddleForce; //TODO: consider removing to remove acceleration
 
             if(ball.yVelocity>0)
-				ball.yVelocity += paddleForce; //TODO: consider removing to remove acceleration
+				ball.yVelocity += paddleForce;
 			else
 				ball.yVelocity -= paddleForce;
 
@@ -187,7 +179,6 @@ public class GamePanel extends JPanel implements Runnable{
 
         obstacleManager.handleCollision(ball);
 
-		//TODO: handle this being ignored on certain ability
 		if(paddle1.y<=0)
 			paddle1.y=0;
 		if(paddle1.y >= (GAME_HEIGHT-PADDLE_HEIGHT))

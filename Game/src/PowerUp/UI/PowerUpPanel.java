@@ -72,10 +72,17 @@ public class PowerUpPanel extends JPanel {
         repaint();
     }
 
-    private void setName(GridBagConstraints gridBagConstraints, Color mainColor) {
-        JLabel nameLabel = new JLabel(powerUp.getName());
+    private void setName(GridBagConstraints gbc, Color mainColor) {
+        String htmlText = "<html><center>" + powerUp.getName() + "</center></html>";
+        JLabel nameLabel = new JLabel(htmlText);
+        nameLabel.setHorizontalAlignment(SwingConstants.CENTER);
+        nameLabel.setFont(new Font("Arial", Font.BOLD, 14));
         nameLabel.setForeground(mainColor);
-        add(nameLabel, gridBagConstraints);
+        gbc.weightx = 1.0;
+        gbc.fill = GridBagConstraints.HORIZONTAL;
+        add(nameLabel, gbc);
+        gbc.weightx = 0;
+        gbc.fill = GridBagConstraints.NONE;
     }
 
     private void setDescription(GridBagConstraints gridBagConstraints) {
