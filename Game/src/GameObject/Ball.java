@@ -24,8 +24,18 @@ public class Ball extends Rectangle{
 		setYDirection(randomYDirection*initialSpeed);
 		
 	}
-	
-	public void setXDirection(float randomXDirection) {
+
+    private Paddle lastHit;
+
+    public Paddle getLastHit() {
+        return lastHit;
+    }
+
+     public void setLastHit(Paddle player) {
+        lastHit = player;
+     }
+
+    public void setXDirection(float randomXDirection) {
 		xVelocity = randomXDirection;
 	}
 	public void setYDirection(float randomYDirection) {
