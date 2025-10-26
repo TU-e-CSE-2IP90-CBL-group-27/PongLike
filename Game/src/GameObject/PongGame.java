@@ -10,7 +10,7 @@ import java.util.Arrays;
 public class PongGame {
 
 	public static void main(String[] args) {
-        ArrayList<BasePowerUp> powerUps = new ArrayList<BasePowerUp>(Arrays.asList(
+        ArrayList<BasePowerUp> powerUps = new ArrayList<>(Arrays.asList(
                 new IncreaseSize(),
                 new IncreaseMovementSpeed(),
                 new IncreaseHitForce(),
@@ -20,7 +20,9 @@ public class PongGame {
                 new BecomeInvincibleToBricks(),
                 new IncreaseObstacleAmount(),
                 new DecreaseGoalAmount(),
-                new SwapScores()
+                new SwapScores(),
+                new IncreasePowerUpChoiceAmount(),
+                new IncreasePowerUpSelectionRepeat()
         ));
         GlobalPowerUpHelper.setGlobalPowerUpList(powerUps);
 		GameFrame frame = new GameFrame();

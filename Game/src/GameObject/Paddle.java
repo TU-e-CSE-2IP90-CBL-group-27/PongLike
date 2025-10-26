@@ -16,8 +16,19 @@ public class Paddle extends Rectangle{
 	int id;
 	private float yVelocity;
 	private float speed = 10;
+
+    private int powerUpSelectionRepeat = 1;
+
     public float getSpeed() {
         return speed;
+    }
+
+    public int getPowerUpSelectionRepeat() {
+        return powerUpSelectionRepeat;
+    }
+
+    public void setPowerUpSelectionRepeat(int powerUpSelectionRepeat) {
+        this.powerUpSelectionRepeat = powerUpSelectionRepeat;
     }
 
     public void setHeight(float height) {

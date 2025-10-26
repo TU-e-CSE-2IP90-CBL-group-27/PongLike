@@ -30,18 +30,22 @@ public class GamePanel extends JPanel implements Runnable{
 	Ball ball;
 	Score score;
 
-    private boolean isPaused = false;
+    private int pauseCount = 0;
 
     public boolean getIsPaused() {
-        return isPaused;
+        return pauseCount > 0;
     }
 
-    public void setIsPaused(boolean isPaused) {
-        this.isPaused = isPaused;
+    public void setIsPaused(int paused) {
+        this.pauseCount = paused;
     }
 
-    public void toggleIsPaused() {
-        isPaused = !isPaused;
+    public void incrementIsPaused() {
+        pauseCount++;
+    }
+
+    public void decrementIsPaused() {
+        pauseCount--;
     }
 
     private final Point startingPointFirstPlayer = new Point(0, (GAME_HEIGHT/2)-(PADDLE_HEIGHT/2));
@@ -196,7 +200,10 @@ public class GamePanel extends JPanel implements Runnable{
 		if(ball.x <=0) {
 			score.player2++;
             SoundManager.playSound(SoundEffectEnum.GOAL);
+
+            incrementIsPaused();
             PowerUpAdder.createSelectionUI(gameFrame,this, paddle1, powerUpInfoPlayerOne);
+
             paddle1.setLocation(startingPointFirstPlayer);
             paddle2.setLocation(startingPointSecondPlayer);
             newBall();
@@ -206,7 +213,11 @@ public class GamePanel extends JPanel implements Runnable{
         if(ball.x >= GAME_WIDTH-MainValues.getBallDiameter()) {
 			score.player1++;
             SoundManager.playSound(SoundEffectEnum.GOAL);
+
+            incrementIsPaused();
             PowerUpAdder.createSelectionUI(gameFrame,this, paddle2, powerUpInfoPlayerTwo);
+
+
             paddle1.setLocation(startingPointFirstPlayer);
             paddle2.setLocation(startingPointSecondPlayer);
             newBall();
@@ -240,7 +251,7 @@ public class GamePanel extends JPanel implements Runnable{
 				checkCollision();
 				repaint();
 				delta--;
-                if (isPaused) {
+                if (pauseCount > 0) {
                     continue;
                 }
                 move();
