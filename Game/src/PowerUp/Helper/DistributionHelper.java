@@ -9,9 +9,11 @@ import java.util.List;
 public class DistributionHelper {
     public static RarityEnum rarityRoll(List<RarityEnum> rarities) {
         double weight = Math.random() * 100;
+        System.out.println("Roll is: " + weight);
 
         for (RarityEnum rarity : rarities) {
             float potentialRarityWeight = rarity.getWeight();
+            System.out.println(rarity.toString() + " " + potentialRarityWeight);
 
             if (potentialRarityWeight > weight) {
                 return rarity;

@@ -16,7 +16,12 @@ import java.util.Optional;
 public class PowerUpPanel extends JPanel {
     private BasePowerUp powerUp;
     private ArrayList<PowerUpWithLevel> currentPowerUps;
+    private GridBagConstraints gbc;
     //TODO: maybe display current level as well
+
+    public BasePowerUp getPowerUp() {
+        return powerUp;
+    }
 
     private GridBagConstraints setLayout(Color maincolor) {
         setBorder(BorderFactory.createLineBorder(maincolor));
@@ -59,6 +64,12 @@ public class PowerUpPanel extends JPanel {
             System.out.println("Error: " + exception);
         }
 
+    }
+
+    public void setLevel(int level) {
+        setMaxLevel(gbc, level);
+        revalidate();
+        repaint();
     }
 
     private void setName(GridBagConstraints gridBagConstraints, Color mainColor) {
@@ -109,8 +120,7 @@ public class PowerUpPanel extends JPanel {
         return powerUpWithLevel.getLevel();
     }
 
-    private void setMaxLevel(GridBagConstraints gridBagConstraints) {
-        int currentLevel = getCurrentLevel();
+    private void setMaxLevel(GridBagConstraints gridBagConstraints, int currentLevel) {
         String message = String.format("Level: %,d / %,d", currentLevel, powerUp.getMaximumLevel());
         JLabel maxLevelLabel = new JLabel(message);
         add(maxLevelLabel, gridBagConstraints);
@@ -120,6 +130,7 @@ public class PowerUpPanel extends JPanel {
         Color mainColor = powerUp.getRarityEnum().getColor();
         System.out.println(mainColor);
         GridBagConstraints gbc = setLayout(mainColor);
+        this.gbc = gbc;
         setName(gbc, mainColor);
         setIconIfExists(gbc);
         setDescription(gbc);
@@ -130,7 +141,7 @@ public class PowerUpPanel extends JPanel {
 
         setRarity(gbc, mainColor);
         setCategory(gbc);
-        setMaxLevel(gbc);
+        setMaxLevel(gbc, getCurrentLevel());
         createButton(gbc, mainColor, selectionFrame);
     }
 

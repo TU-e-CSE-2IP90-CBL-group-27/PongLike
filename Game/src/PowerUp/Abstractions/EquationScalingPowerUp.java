@@ -11,7 +11,7 @@ public abstract class EquationScalingPowerUp extends BasePowerUp {
         return equation(value, level);
     }
 
-    public EquationScalingPowerUp(String name, String description, PowerUpCategoryEnum powerUpCategoryEnum, RarityEnum rarityEnum     ) {
+    public EquationScalingPowerUp(String name, String description, PowerUpCategoryEnum powerUpCategoryEnum, RarityEnum rarityEnum) {
         super(name, description, powerUpCategoryEnum, rarityEnum);
     }
 

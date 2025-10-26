@@ -2,7 +2,10 @@ package src.GameObject;
 
 import src.AssetManager.Sound.SoundEffectEnum;
 import src.AssetManager.Sound.SoundManager;
+import src.GameValuesManager.MainValues;
 import src.PowerUp.Actions.PowerUpAdder;
+import src.PowerUp.Actions.PowerUpFinder;
+import src.PowerUp.Implementations.BecomeInvincibleToBricks;
 import src.PowerUp.UI.PowerUpInfo;
 
 import java.awt.*;
@@ -15,7 +18,6 @@ public class GamePanel extends JPanel implements Runnable{
 	static final int GAME_WIDTH = 1000;
 	static final int GAME_HEIGHT = (int)(GAME_WIDTH * (0.5555));
 	static final Dimension SCREEN_SIZE = new Dimension(GAME_WIDTH,GAME_HEIGHT);
-	static final int BALL_DIAMETER = 20;
 	static final int PADDLE_WIDTH = 25;
 	static final int PADDLE_HEIGHT = 100;
 
@@ -28,18 +30,22 @@ public class GamePanel extends JPanel implements Runnable{
 	Ball ball;
 	Score score;
 
-    private boolean isPaused = false;
+    private int pauseCount = 0;
 
     public boolean getIsPaused() {
-        return isPaused;
+        return pauseCount > 0;
     }
 
-    public void setIsPaused(boolean isPaused) {
-        this.isPaused = isPaused;
+    public void setIsPaused(int paused) {
+        this.pauseCount = paused;
     }
 
-    public void toggleIsPaused() {
-        isPaused = !isPaused;
+    public void incrementIsPaused() {
+        pauseCount++;
+    }
+
+    public void decrementIsPaused() {
+        pauseCount--;
     }
 
     private final Point startingPointFirstPlayer = new Point(0, (GAME_HEIGHT/2)-(PADDLE_HEIGHT/2));
@@ -86,7 +92,8 @@ public class GamePanel extends JPanel implements Runnable{
 	}
 	
 	public void newBall() {
-		ball = new Ball((GAME_WIDTH/2)-(BALL_DIAMETER/2),random.nextInt(GAME_HEIGHT-BALL_DIAMETER),BALL_DIAMETER,BALL_DIAMETER);
+        int ballDiameter = MainValues.getBallDiameter();
+		ball = new Ball((GAME_WIDTH/2)-(ballDiameter/2),random.nextInt(GAME_HEIGHT-ballDiameter),ballDiameter,ballDiameter);
 	}
 	public void newPaddles() {
 		paddle1 = new Paddle(0,(GAME_HEIGHT/2)-(PADDLE_HEIGHT/2),PADDLE_WIDTH,PADDLE_HEIGHT,1);
@@ -117,18 +124,35 @@ public class GamePanel extends JPanel implements Runnable{
 		paddle2.move();
 		ball.move();
 	}
+
+    public void decreaseScoreUse(Paddle player) {
+        if (player.equals(paddle1)) {
+            score.player2--;
+            return;
+        }
+
+        score.player1--;
+    }
+
+    public void swapScores() {
+        int inter = score.player1;
+        score.player1 = score.player2;
+        score.player2 = inter;
+    }
+
 	public void checkCollision() {
 		
 		if(ball.y <= 0) {
 			ball.setYDirection(-ball.yVelocity);
 		}
-		if(ball.y >= GAME_HEIGHT-BALL_DIAMETER) {
+		if(ball.y >= GAME_HEIGHT-MainValues.getBallDiameter()) {
 			ball.setYDirection(-ball.yVelocity);
 		}
 
 		if(ball.intersects(paddle1)) {
             SoundManager.playSound(SoundEffectEnum.PADDLE_HIT);
 			ball.xVelocity = Math.abs(ball.xVelocity);
+            ball.setLastHit(paddle1);
 
             float paddleForce = paddle1.getHitForce();
             ball.xVelocity += paddleForce; //TODO: consider removing to remove acceleration
@@ -147,6 +171,7 @@ public class GamePanel extends JPanel implements Runnable{
 		if(ball.intersects(paddle2)) {
             SoundManager.playSound(SoundEffectEnum.PADDLE_HIT);
             ball.xVelocity = Math.abs(ball.xVelocity);
+            ball.setLastHit(paddle2);
 
             float paddleForce = paddle2.getHitForce();
             ball.xVelocity += paddleForce; //TODO: consider removing to remove acceleration
@@ -175,17 +200,24 @@ public class GamePanel extends JPanel implements Runnable{
 		if(ball.x <=0) {
 			score.player2++;
             SoundManager.playSound(SoundEffectEnum.GOAL);
+
+            incrementIsPaused();
             PowerUpAdder.createSelectionUI(gameFrame,this, paddle1, powerUpInfoPlayerOne);
+
             paddle1.setLocation(startingPointFirstPlayer);
             paddle2.setLocation(startingPointSecondPlayer);
             newBall();
 			System.out.println("Player 2: "+score.player2);
 		}
 
-        if(ball.x >= GAME_WIDTH-BALL_DIAMETER) {
+        if(ball.x >= GAME_WIDTH-MainValues.getBallDiameter()) {
 			score.player1++;
             SoundManager.playSound(SoundEffectEnum.GOAL);
+
+            incrementIsPaused();
             PowerUpAdder.createSelectionUI(gameFrame,this, paddle2, powerUpInfoPlayerTwo);
+
+
             paddle1.setLocation(startingPointFirstPlayer);
             paddle2.setLocation(startingPointSecondPlayer);
             newBall();
@@ -219,7 +251,7 @@ public class GamePanel extends JPanel implements Runnable{
 				checkCollision();
 				repaint();
 				delta--;
-                if (isPaused) {
+                if (pauseCount > 0) {
                     continue;
                 }
                 move();
