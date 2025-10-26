@@ -14,7 +14,7 @@ public class IncreasePowerUpChoiceAmount extends NoScalingPowerUp {
                 PowerUpCategoryEnum.OTHER,
                 RarityEnum.RARE,
                 2,
-                SpriteEnum.RED
+                SpriteEnum.CRATE
         );
     }
 

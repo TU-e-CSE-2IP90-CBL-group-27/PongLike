@@ -14,7 +14,7 @@ public class IncreasePowerUpSelectionRepeat extends NoScalingPowerUp {
                 PowerUpCategoryEnum.OTHER,
                 RarityEnum.LEGENDARY,
                 2,
-                SpriteEnum.BALL_BOMB
+                SpriteEnum.CHEST
         );
     }
 

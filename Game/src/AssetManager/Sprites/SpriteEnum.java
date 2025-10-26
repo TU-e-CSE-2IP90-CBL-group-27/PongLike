@@ -10,7 +10,9 @@ public enum SpriteEnum {
     OPEN("./Game/Assets/Sprites/open.png"),
     WALLS("./Game/Assets/Sprites/walls.png"),
     SKULL("./Game/Assets/Sprites/rskull.png"),
-    RED("./Game/Assets/Sprites/red.png");
+    RED("./Game/Assets/Sprites/red.png"),
+    CRATE("./Game/Assets/Sprites/crate.png"),
+    CHEST("./Game/Assets/Sprites/chest.png");
 
     private String path;
 
