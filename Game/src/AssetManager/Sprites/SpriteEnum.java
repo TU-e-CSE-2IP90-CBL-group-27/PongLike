@@ -6,7 +6,9 @@ public enum SpriteEnum {
     LARGE_BRICK("./Game/Assets/Sprites/large-brick.png"),
     FIRE_WALL("./Game/Assets/Sprites/fire-wall.png"),
     COLUMN("./Game/Assets/Sprites/column.png"),
-    BALL_BOMB("./Game/Assets/Sprites/ball-bomb.png");
+    BALL_BOMB("./Game/Assets/Sprites/ball-bomb.png"),
+    OPEN("./Game/Assets/Sprites/open.png"),
+    WALLS("./Game/Assets/Sprites/walls.png");
 
     private String path;
 

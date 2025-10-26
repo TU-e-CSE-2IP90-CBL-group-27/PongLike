@@ -4,6 +4,8 @@ import src.AssetManager.Sound.SoundEffectEnum;
 import src.AssetManager.Sound.SoundManager;
 import src.GameValuesManager.MainValues;
 import src.PowerUp.Actions.PowerUpAdder;
+import src.PowerUp.Actions.PowerUpFinder;
+import src.PowerUp.Implementations.BecomeInvincibleToBricks;
 import src.PowerUp.UI.PowerUpInfo;
 
 import java.awt.*;
@@ -118,6 +120,8 @@ public class GamePanel extends JPanel implements Runnable{
 		paddle2.move();
 		ball.move();
 	}
+
+
 	public void checkCollision() {
 		
 		if(ball.y <= 0) {
@@ -130,6 +134,7 @@ public class GamePanel extends JPanel implements Runnable{
 		if(ball.intersects(paddle1)) {
             SoundManager.playSound(SoundEffectEnum.PADDLE_HIT);
 			ball.xVelocity = Math.abs(ball.xVelocity);
+            ball.setLastHit(paddle1);
 
             float paddleForce = paddle1.getHitForce();
             ball.xVelocity += paddleForce; //TODO: consider removing to remove acceleration
@@ -148,6 +153,7 @@ public class GamePanel extends JPanel implements Runnable{
 		if(ball.intersects(paddle2)) {
             SoundManager.playSound(SoundEffectEnum.PADDLE_HIT);
             ball.xVelocity = Math.abs(ball.xVelocity);
+            ball.setLastHit(paddle2);
 
             float paddleForce = paddle2.getHitForce();
             ball.xVelocity += paddleForce; //TODO: consider removing to remove acceleration

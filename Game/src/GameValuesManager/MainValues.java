@@ -8,6 +8,7 @@ public class MainValues {
     private static float RARE_CHANCE = MainValuesConstants.RARE_CHANCE;
     private static float LEGENDARY_CHANCE = MainValuesConstants.LEGENDARY_CHANCE;
     private static float INSANE_CHANCE = MainValuesConstants.INSANE_CHANCE;
+    private static int OBSTACLE_AMOUNT = MainValuesConstants.OBSTACLE_AMOUNT;
 
     public static float getCommonChance() {
         return COMMON_CHANCE;
@@ -24,6 +25,19 @@ public class MainValues {
     public static float getLegendaryChance() {
         return LEGENDARY_CHANCE;
     }
+
+    public static int getObstacleAmount() {
+        return OBSTACLE_AMOUNT;
+    }
+
+    public static void setObstacleAmount(int obstacleAmount) {
+        OBSTACLE_AMOUNT = obstacleAmount;
+    }
+
+    public static void incrementObstacleAmount() {
+        OBSTACLE_AMOUNT += 1;
+    }
+
 
     public static int getBallDiameter() {
         return BALL_DIAMETER;
