@@ -1,5 +1,7 @@
 package src.GameObject;
 
+import src.Utils.ColorUtils;
+
 import java.awt.*;
 import java.util.*;
 
@@ -9,6 +11,8 @@ public class Ball extends Rectangle{
 	float xVelocity;
 	float yVelocity;
 	int initialSpeed = 2;
+
+    private Color color = ColorUtils.getRandomBrightColor();
 	
 	Ball(int x, int y, int width, int height){
 		super(x,y,width,height);
@@ -46,7 +50,7 @@ public class Ball extends Rectangle{
 		y += yVelocity;
 	}
 	public void draw(Graphics g) {
-		g.setColor(Color.white);
+		g.setColor(color);
 		g.fillOval(x, y, height, width);
 	}
 }

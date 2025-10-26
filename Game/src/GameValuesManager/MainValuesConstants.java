@@ -3,6 +3,8 @@ package src.GameValuesManager;
 public class MainValuesConstants {
     public static final long OBSTACLE_INTERVAL_NANOS = 10_000_000_000L; // 10 seconds
     public static final int OBSTACLE_HEIGHT = 150; // tweak
+    public static final int OBSTACLE_WIDTH = 20;
+
     public static final int BALL_DIAMETER = 20;
 
     public static final float COMMON_CHANCE = 60;

@@ -11,7 +11,7 @@ public class BecomeInvincibleToBricks extends NoScalingPowerUp {
                 "Brick invincibility",
                 "Your shots no longer get intercepted by the obstacles",
                 PowerUpCategoryEnum.BRICK,
-                RarityEnum.LEGENDARY, // TODO: balancing, maybe set to insane
+                RarityEnum.INSANE,
                 1,
                 SpriteEnum.OPEN
         );

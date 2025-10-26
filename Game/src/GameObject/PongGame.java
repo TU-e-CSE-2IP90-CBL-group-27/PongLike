@@ -22,7 +22,8 @@ public class PongGame {
                 new DecreaseGoalAmount(),
                 new SwapScores(),
                 new IncreasePowerUpChoiceAmount(),
-                new IncreasePowerUpSelectionRepeat()
+                new IncreasePowerUpSelectionRepeat(),
+                new IncreaseObstacleWidth()
         ));
         GlobalPowerUpHelper.setGlobalPowerUpList(powerUps);
 		GameFrame frame = new GameFrame();
