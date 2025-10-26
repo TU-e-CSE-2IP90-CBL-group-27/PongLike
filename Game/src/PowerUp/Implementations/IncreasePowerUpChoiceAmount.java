@@ -12,7 +12,7 @@ public class IncreasePowerUpChoiceAmount extends NoScalingPowerUp {
                 "Add another power up choice",
                 "Adds another power up choice on this screen.",
                 PowerUpCategoryEnum.OTHER,
-                RarityEnum.COMMON,
+                RarityEnum.RARE,
                 2,
                 SpriteEnum.RED
         );

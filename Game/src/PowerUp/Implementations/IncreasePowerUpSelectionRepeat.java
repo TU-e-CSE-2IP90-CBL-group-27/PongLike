@@ -12,7 +12,7 @@ public class IncreasePowerUpSelectionRepeat extends NoScalingPowerUp {
                 "Repeat power up selection",
                 "Choose more than one power up",
                 PowerUpCategoryEnum.OTHER,
-                RarityEnum.COMMON,
+                RarityEnum.LEGENDARY,
                 2,
                 SpriteEnum.BALL_BOMB
         );
